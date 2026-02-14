@@ -68,18 +68,18 @@
             <div class="card-body">
               <div *ngIf="activeAboutSection === 'overview'">
                 <h3 class="text-brown mb-3">نظرة عامة</h3>
-                <p>{{ department?.about }}</p>
-              </div>
+  <div class="quill-content description"
+                     [innerHTML]="department?.about | cleanHtml"></div>              </div>
 
               <div *ngIf="activeAboutSection === 'vision'">
                 <h3 class="text-brown mb-3">الرؤية</h3>
-                <p>{{ department?.vision }}</p>
-              </div>
+  <div class="quill-content description"
+                     [innerHTML]="department?.vision | cleanHtml"></div>              </div>
 
               <div *ngIf="activeAboutSection === 'mission'">
                 <h3 class="text-brown mb-3">الرسالة</h3>
-                <p>{{ department?.mission }}</p>
-              </div>
+  <div class="quill-content description"
+                     [innerHTML]="department?.mission | cleanHtml"></div>              </div>
 
               <div *ngIf="activeAboutSection === 'objectives'">
                 <h3 class="text-brown mb-3">الأهداف</h3>
@@ -98,8 +98,8 @@
       <div class="card">
         <div class="card-body">
           <h3 class="text-brown mb-3">{{ departmentDetail?.title }}</h3>
-          <p class="mb-3">{{ departmentDetail?.content }}</p>
-        </div>
+ <div class="quill-content description"
+               [innerHTML]="departmentDetail?.content | cleanHtml"></div>        </div>
       </div>
     </div> -->
 

@@ -67,23 +67,28 @@
             <div class="card-body">
               <div *ngIf="activeAboutSection === 'overview'">
                 <h3 class="text-brown mb-3">نظرة عامة</h3>
-                <p>{{ about?.content }}</p>
+<div class="quill-content description"
+       [innerHTML]="about?.content | cleanHtml">
+  </div>
               </div>
 
               <div *ngIf="activeAboutSection === 'vision'">
                 <h3 class="text-brown mb-3">الرؤية</h3>
-                <p>{{ about?.vision }}</p>
-              </div>
+ <div class="quill-content description"
+       [innerHTML]="about?.vision | cleanHtml">
+  </div>              </div>
 
               <div *ngIf="activeAboutSection === 'mission'">
                 <h3 class="text-brown mb-3">الرسالة</h3>
-                <p>{{ about?.mission }}</p>
-              </div>
+<div class="quill-content description"
+       [innerHTML]="about?.mission | cleanHtml">
+  </div>              </div>
 
               <div *ngIf="activeAboutSection === 'history'">
                 <h3 class="text-brown mb-3">التاريخ</h3>
-                <p>{{ about?.history }}</p>
-              </div>
+ <div class="quill-content description"
+       [innerHTML]="about?.history | cleanHtml">
+  </div>              </div>
 
               <div *ngIf="activeAboutSection === 'objectives'">
                 <h3 class="text-brown mb-3">الأهداف</h3>

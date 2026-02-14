@@ -73,19 +73,21 @@
             <div class="card-body">
               <div *ngIf="activeAboutSection === 'overview'">
                 <h3 class="text-brown mb-3">نظرة عامة</h3>
-                <p *ngIf="program?.about">{{ program?.about }}</p>
-                <p *ngIf="!program?.about">لا توجد معلومات متاحة عن البرنامج.</p>
+ <div *ngIf="program?.about" class="quill-content description"
+                     [innerHTML]="program?.about | cleanHtml"></div>
+                                     <p *ngIf="!program?.about">لا توجد معلومات متاحة عن البرنامج.</p>
               </div>
 
               <div *ngIf="activeAboutSection === 'vision'">
                 <h3 class="text-brown mb-3">الرؤية</h3>
-                <p>{{ program?.vision }}</p>
-              </div>
+  <div class="quill-content description"
+                     [innerHTML]="program?.vision | cleanHtml"></div>
+                                  </div>
 
               <div *ngIf="activeAboutSection === 'mission'">
                 <h3 class="text-brown mb-3">الرسالة</h3>
-                <p>{{ program?.mission }}</p>
-              </div>
+ <div class="quill-content description"
+                     [innerHTML]="program?.mission | cleanHtml"></div>              </div>
 
               <div *ngIf="activeAboutSection === 'objectives'">
                 <h3 class="text-brown mb-3">الأهداف</h3>
@@ -104,8 +106,9 @@
       <div class="card" *ngIf="programDetail?.title || programDetail?.content">
         <div class="card-body">
           <h3 class="text-brown mb-3">{{ programDetail?.title }}</h3>
-          <p class="mb-3">{{ programDetail?.content }}</p>
-          <ul class="list-unstyled">
+<div class="quill-content description mb-3"
+               [innerHTML]="programDetail?.content | cleanHtml"></div>
+                         <ul class="list-unstyled">
             <!-- <li><strong>الفئة المستهدفة:</strong> {{ programDetail?.programCategory }}</li> -->
             <!-- <li><strong>الكلية:</strong> {{ programDetail?.facultyName }}</li> -->
           </ul>

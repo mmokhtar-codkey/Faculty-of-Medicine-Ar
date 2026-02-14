@@ -59,19 +59,20 @@
             <div class="card-body">
               <div *ngIf="activeAboutSection === 'overview'">
                 <h3 class="text-brown mb-3">نظرة عامة</h3>
-                <p *ngIf="unit?.content">{{ unit?.content }}</p>
-                <p *ngIf="!unit?.content">لا توجد معلومات متاحة عن الوحدة.</p>
+<div *ngIf="unit?.content" class="quill-content description"
+                     [innerHTML]="unit?.content | cleanHtml"></div>
+                                     <p *ngIf="!unit?.content">لا توجد معلومات متاحة عن الوحدة.</p>
               </div>
 
               <div *ngIf="activeAboutSection === 'vision'">
                 <h3 class="text-brown mb-3">الرؤية</h3>
-                <p>{{ unit?.vision }}</p>
-              </div>
+ <div class="quill-content description"
+                     [innerHTML]="unit?.vision | cleanHtml"></div>              </div>
 
               <div *ngIf="activeAboutSection === 'mission'">
                 <h3 class="text-brown mb-3">الرسالة</h3>
-                <p>{{ unit?.mission }}</p>
-              </div>
+ <div class="quill-content description"
+                     [innerHTML]="unit?.mission | cleanHtml"></div>              </div>
 
               <div *ngIf="activeAboutSection === 'objectives'">
                 <h3 class="text-brown mb-3">الأهداف</h3>
@@ -90,8 +91,9 @@
       <div class="card" *ngIf="unitDetail?.title || unitDetail?.content || unitDetail?.unitPlace">
         <div class="card-body">
           <h3 class="text-brown mb-3">{{ unitDetail?.title }}</h3>
-          <p class="mb-3">{{ unitDetail?.content }}</p>
-          <p><strong>المكان:</strong> {{ unitDetail?.unitPlace }}</p>
+<div class="quill-content description mb-3"
+               [innerHTML]="unitDetail?.content | cleanHtml"></div>
+                         <p><strong>المكان:</strong> {{ unitDetail?.unitPlace }}</p>
         </div>
       </div>
       <p *ngIf="!unitDetail?.title && !unitDetail?.content && !unitDetail?.unitPlace">لا توجد معلومات متاحة.</p>

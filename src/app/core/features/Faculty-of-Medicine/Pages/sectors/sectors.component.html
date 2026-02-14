@@ -76,18 +76,19 @@
             <div class="card-body">
               <div *ngIf="activeAboutSection === 'overview'">
                 <h3 class="text-brown mb-3">نظرة عامة</h3>
-                <p *ngIf="sector?.about">{{ sector?.about }}</p>
-                <p *ngIf="!sector?.about">لا توجد معلومات متاحة عن القطاع.</p>
+  <div *ngIf="sector?.about" class="quill-content description" [innerHTML]="sector?.about | cleanHtml">
+                </div>
+                                <p *ngIf="!sector?.about">لا توجد معلومات متاحة عن القطاع.</p>
               </div>
 
               <div *ngIf="activeAboutSection === 'vision'">
                 <h3 class="text-brown mb-3">الرؤية</h3>
-                <p>{{ sector?.vision }}</p>
+                <div class="quill-content description" [innerHTML]="sector?.vision | cleanHtml"></div>
               </div>
 
               <div *ngIf="activeAboutSection === 'mission'">
                 <h3 class="text-brown mb-3">الرسالة</h3>
-                <p>{{ sector?.mission }}</p>
+                <div class="quill-content description" [innerHTML]="sector?.mission | cleanHtml"></div>
               </div>
 
               <div *ngIf="activeAboutSection === 'objectives'">
@@ -107,7 +108,7 @@
       <div class="card">
         <div class="card-body">
           <h3 class="text-brown mb-3">{{ sectorDetail?.title }}</h3>
-          <p class="mb-3">{{ sectorDetail?.content }}</p>
+          <div class="quill-content description mb-3" [innerHTML]="sectorDetail?.content | cleanHtml"></div>
           <p *ngIf="!sectorDetail?.content">لا توجد تفاصيل متاحة عن القطاع.</p>
 
         </div>

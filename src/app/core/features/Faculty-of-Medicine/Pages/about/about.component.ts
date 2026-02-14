@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AboutService } from '../../Services/about.service';
 import { AboutUniversity, Member } from '../../model/about.model';
+import { CleanHtmlPipe } from '../../../../pipes/clean-html.pipe'; // ✅ استدعاء الـ Pipe
+
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CleanHtmlPipe],
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.css']
 })
