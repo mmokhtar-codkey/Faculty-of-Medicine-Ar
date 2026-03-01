@@ -59,7 +59,7 @@ export class DepartmentsService {
   // جلب قسم واحد بالـ slug (جديدة)
   getDepartmentBySlug(slug: string): Observable<Department | undefined> {
     return this.getAllDepartments().pipe(
-      map(departments => departments.find(d => slugify(d.name) === slug))
+      map(departments => departments.find(d => slugify(d.slug) === slug))
     );
   }
 
