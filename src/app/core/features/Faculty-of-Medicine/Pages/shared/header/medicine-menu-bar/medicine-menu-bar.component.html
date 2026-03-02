@@ -1,7 +1,50 @@
-  <!-- medicine-menu-bar.component.html -->
+<nav class="medicine-menu-bar">
+  <div class="menu-container">
+    <!-- Mobile Menu Toggle Button -->
+    <button class="menu-toggle-btn" type="button" (click)="toggleMobileMenu()" [attr.aria-expanded]="!isCollapsed"
+      aria-label="Toggle navigation" [class.active]="!isCollapsed">
+      <span class="menu-toggle-icon">
+        <i class="fas" [class.fa-bars]="isCollapsed" [class.fa-times]="!isCollapsed"></i>
+      </span>
+    </button>
+
+    <div class="menu-nav" [class.collapsed]="isCollapsed" [class.expanded]="!isCollapsed" [class.mobile]="isMobile">
+      <ul class="menu-list">
+        @for (item of navbarItems(); track item.id) {
+        <li class="menu-item dropdown" [class.has-dropdown]="(item.children?.length ?? 0) > 0">
+          <a [routerLink]="getRouterLink(item)" routerLinkActive="active-menu-item" class="menu-link"
+            [class.dropdown-toggle]="(item.children?.length ?? 0) > 0" (click)="onTabClick(item, $event)"> {{ item.label
+            }} </a>
+
+          <ul class="dropdown-menu" *ngIf="item.children?.length" [class.show]="activeDropdown === item.id"> @for (child
+            of item.children; track child.id) { <li class="dropdown-sub-item"
+              [class.has-sub-dropdown]="(child.children?.length ?? 0) > 0"> <a
+                [routerLink]="item.slug + '/' + child.slug" routerLinkActive="active-submenu-item" class="dropdown-item"
+                [class.dropdown-toggle]="(child.children?.length ?? 0) > 0"
+                (click)="onSubTabClick(child, item, $event)"> {{ child.label }} </a>
+              <!-- المستوى الثالث (sub-sub menu) -->
+              <ul class="dropdown-submenu" *ngIf="child.children?.length" [class.show]="activeSubDropdown === child.id">
+                @for (subChild of child.children; track subChild.id) { <li> <a
+                    [routerLink]="item.slug + '/' + child.slug + '/' + subChild.slug"
+                    routerLinkActive="active-sub-submenu-item" class="dropdown-submenu-item"
+                    (click)="onSubSubTabClick(subChild, child, item, $event)"> {{ subChild.label }} </a> </li> } </ul>
+            </li> } </ul>
+        </li>
+        }
+      </ul>
+
+
+    </div>
+  </div>
+
+  <!-- Click outside overlay for mobile -->
+  <div class="dropdown-overlay" *ngIf="!isCollapsed && isMobile" (click)="isCollapsed = true"></div>
+</nav>
+<!-- medicine-menu-bar.component.html 
+
     <nav class="medicine-menu-bar">
       <div class="menu-container">
-        <!-- Mobile Menu Toggle Button -->
+      Mobile Menu Toggle Button 
         <button
           class="menu-toggle-btn"
           type="button"
@@ -15,7 +58,7 @@
           </span>
         </button>
 
-        <!-- Navigation Menu -->
+ 
         <div
           class="menu-nav"
           [class.collapsed]="isCollapsed"
@@ -23,14 +66,14 @@
           [class.mobile]="isMobile"
         >
           <ul class="menu-list">
-            <!-- Main Navigation Tabs -->
+
             <li
               class="menu-item"
               *ngFor="let tab of menuTabs; trackBy: trackByFn"
               [class.has-dropdown]="tab.childs && tab.childs.length > 0"
               [class.dropdown-open]="activeDropdown === tab.id"
             >
-              <!-- Regular Tab -->
+
               <a
                 *ngIf="!tab.childs || tab.childs.length === 0"
                 class="menu-link"
@@ -44,7 +87,7 @@
                 <span class="menu-text">{{ tab.title }}</span>
               </a>
 
-              <!-- Dropdown Tab -->
+
               <div *ngIf="tab.childs && tab.childs.length > 0" class="dropdown">
                 <a
                   class="menu-link dropdown-toggle"
@@ -57,11 +100,11 @@
                 >
                   <i *ngIf="tab.icon" [class]="tab.icon" class="menu-icon"></i>
                   <span class="menu-text">{{ tab.title }}</span>
-                  <!-- <i class="fas fa-chevron-down dropdown-arrow"
-                     [class.rotated]="activeDropdown === tab.id"></i> -->
+                  <i class="fas fa-chevron-down dropdown-arrow"
+                     [class.rotated]="activeDropdown === tab.id"></i> 
                 </a>
 
-                <!-- Dropdown Menu for regular -->
+
                 <ul
                   *ngIf="tab.type === 'menu'" class="dropdown-menu"
                   [class.show]="activeDropdown === tab.id"
@@ -81,7 +124,7 @@
                   </li>
                 </ul>
 
-                <!-- Two-column Dropdown Menu -->
+
                 <div
                   *ngIf="tab.type === 'columns'" class="dropdown-columns"
                   [class.show]="activeDropdown === tab.id"
@@ -111,10 +154,10 @@
         </div>
       </div>
 
-      <!-- Click outside overlay for mobile -->
+
       <div
         class="dropdown-overlay"
         *ngIf="!isCollapsed && isMobile"
         (click)="isCollapsed = true"
       ></div>
-    </nav>
+    </nav> -->

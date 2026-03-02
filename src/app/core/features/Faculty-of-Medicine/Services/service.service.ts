@@ -31,7 +31,7 @@ export class ServiceService {
   // جلب خدمة واحدة بالـ slug (جديدة)
   getBySlug(slug: string): Observable<ServiceDetail | undefined> {
     return this.getAll().pipe(
-      map(services => services.find(s => slugify(s.title) === slug))
+      map(services => services.find(s => slugify(s.slug) === slug))
     );
   }
 }

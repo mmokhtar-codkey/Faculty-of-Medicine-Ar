@@ -23,6 +23,7 @@ export interface Department {
   id: string;
   name: string;
   subTitle: string;
+  slug: string;
   departmentType: string;
   pageId: string;
   pageTitle: string;
