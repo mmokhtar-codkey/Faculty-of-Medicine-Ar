@@ -2,36 +2,43 @@
       <div class="logo-bar-container">
         <!-- Logo Section -->
         <div class="logo-section">
-          <img
-            [src]="logoData.logoPath"
-            [alt]="logoData.logoAltText"
-            class="logo-image"
-            (click)="openLocation()"
-            style="cursor: pointer;"
-          >
+          <a routerLink="/home">
+            <img
+              [src]="logoUrl"
+              [alt]="'Faculty of Medicine Logo'"
+              class="logo-image"
+              style="cursor: pointer;"
+              *ngIf="logoUrl"
+            >
+          </a>
           <div class="logo-text">
-            <h1 class="logo-title">{{ logoData.title }}</h1>
+            <h1 class="logo-title">كلية الطب - جامعة الاقصر </h1>
           </div>
         </div>
 
         <!-- Contact Information Section -->
         <div class="contact-section">
           <!-- Address -->
-          <a class="contact-item" *ngIf="contactInfo.address" (click)="openLocation()">
+          <a class="contact-item" *ngIf="contact?.address" (click)="openLocation()">
             <i class="fas fa-map-marker-alt"></i>
-            <span>{{ contactInfo.address }}</span>
+            <span>{{ contact?.address }}</span>
           </a>
 
           <!-- Phone -->
-          <a class="contact-item" *ngIf="contactInfo.phone" (click)="openPhone(contactInfo.phone)">
+          <a class="contact-item" *ngIf="contact?.phone" (click)="openPhone(contact!.phone)">
             <i class="fas fa-phone"></i>
-            <span>{{ contactInfo.phone }}</span>
+            <span>{{ contact?.phone }}</span>
           </a>
 
           <!-- Email -->
-          <a class="contact-item" *ngIf="contactInfo.email" (click)="openEmail()">
+          <a class="contact-item" *ngIf="contact?.email" (click)="openEmail()">
             <i class="fas fa-envelope"></i>
-            <span>{{ contactInfo.email }}</span>
+            <span>{{ contact?.email }}</span>
+          </a>
+          <!-- Language -->
+          <a class="contact-item" href="{{ contact?.webSite }}" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-language"></i>
+            <span>EN</span>
           </a>
         </div>
       </div>

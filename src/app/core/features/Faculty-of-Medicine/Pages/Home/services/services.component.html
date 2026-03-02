@@ -1,45 +1,38 @@
-   <div class="services-section" *ngIf="showTitle || services.length > 0">
-      <!-- Section Title -->
-      <div class="section-title" *ngIf="showTitle">
-        <h2>{{ sectionTitle }}</h2>
-      </div>
+<div class="services-section" *ngIf="showTitle || services.length > 0">
+  <!-- Section Title -->
+  <div class="section-title" *ngIf="showTitle">
+    <h2>{{ sectionTitle }}</h2>
+  </div>
 
-      <!-- Services Grid -->
-      <div class="services-grid">
-        <div class="service-card" 
-             *ngFor="let service of services; trackBy: trackByFn" 
-             (click)="onServiceClick(service)">
-         
-          <!-- Card Header - Split Design (Type Left + Category Right) -->
-          <div class="card-header-split">
-            <!-- Type Section (Left Side) -->
-            <div class="card-icon-section">
-              <span class="type-text">{{ service.type }}</span>
-            </div>
-            
-            <!-- Category Section (Right Side) -->
-            <div class="card-title-section">
-              <h4 class="card-title">{{ service.category }}</h4>
-            </div>
-          </div>
-
-          <!-- Card Content -->
-          <div class="card-content">
-            <h3 class="service-title">{{ service.title }}</h3>
-            <p class="card-description">{{ service.description }}</p>
-         
-          </div>
+  <!-- Services Grid -->
+  <div class="services-grid">
+    <div class="service-card" 
+         *ngFor="let service of services; trackBy: trackByFn" 
+         (click)="onServiceClick(service)">
+      
+      <!-- Card Header -->
+      <div class="card-header-split">
+        <div class="card-title-section">
+          <h4 class="card-title">{{ service.iconPath }}</h4>
         </div>
       </div>
 
-      <!-- All Services Button -->
-      <div class="all-services-section" *ngIf="showAllServicesButton">
-        <a
-          [routerLink]="[allServicesUrl]"
-          class="all-services-btn"
-          (click)="onAllServicesClick()"
-        >
-          {{ allServicesText }}
-        </a>
+      <!-- Card Content -->
+      <div class="card-content">
+        <h3 class="service-title">{{ service.title }}</h3>
+        <!-- <p class="card-description">{{ service.description }}</p> -->
       </div>
     </div>
+  </div>
+
+  <!-- All Services Button -->
+  <div class="all-services-section" *ngIf="showAllServicesButton">
+    <a
+      [routerLink]="[allServicesUrl]"
+      class="all-services-btn"
+      (click)="onAllServicesClick()"
+    >
+      {{ allServicesText }}
+    </a>
+  </div>
+</div>

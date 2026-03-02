@@ -1,7 +1,7 @@
 <div class="container section">
   <!-- Program Title Section -->
-  <div class="sector-header bg-primary text-white p-4 mb-4 rounded">
-    <h1 class="mb-0">{{ program?.name || 'جاري تحميل البيانات...' }}</h1>
+  <div class="sector-header  text-white p-4 mb-4 rounded">
+    <h1 class="text-brown">{{ program?.pageTitle || 'جاري تحميل البيانات...' }}</h1>
   </div>
 
   <!-- Horizontal Tabs -->
@@ -20,31 +20,11 @@
       <li class="nav-item">
         <button 
           class="nav-link" 
-          [class.active]="activeTab === 'courses'"
-          (click)="switchTab('courses')"
+          [class.active]="activeTab === 'details'"
+          (click)="switchTab('details')"
           type="button"
         >
-          مقررات البرنامج
-        </button>
-      </li>
-      <li class="nav-item">
-        <button 
-          class="nav-link" 
-          [class.active]="activeTab === 'services'"
-          (click)="switchTab('services')"
-          type="button"
-        >
-          خدمات البرنامج
-        </button>
-      </li>
-      <li class="nav-item">
-        <button
-          class="nav-link"
-          [class.active]="activeTab === 'news'"
-          (click)="switchTab('news')"
-          type="button"
-        >
-          أخبار البرنامج
+          تفاصيل البرنامج
         </button>
       </li>
       <li class="nav-item">
@@ -54,7 +34,7 @@
           (click)="switchTab('members')"
           type="button"
         >
-          فريق البرنامج
+          هيئة التدريس
         </button>
       </li>
     </ul>
@@ -68,45 +48,21 @@
         <!-- Sidebar -->
         <div class="col-md-3 mb-4">
           <div class="list-group">
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'overview'"
-              (click)="switchAboutSection('overview')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'overview'" (click)="switchAboutSection('overview')">
               نظرة عامة
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'vision'"
-              (click)="switchAboutSection('vision')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'vision'" (click)="switchAboutSection('vision')">
               الرؤية
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'mission'"
-              (click)="switchAboutSection('mission')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'mission'" (click)="switchAboutSection('mission')">
               الرسالة
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'objectives'"
-              (click)="switchAboutSection('objectives')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'objectives'" (click)="switchAboutSection('objectives')">
               الأهداف
-            </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'career'"
-              (click)="switchAboutSection('career')"
-            >
-              الفرص الوظيفية
             </button>
           </div>
         </div>
@@ -117,41 +73,26 @@
             <div class="card-body">
               <div *ngIf="activeAboutSection === 'overview'">
                 <h3 class="text-brown mb-3">نظرة عامة</h3>
-                <p>{{ program?.generalOverview }}</p>
-                <div class="row mt-4" *ngIf="program">
-                  <div class="col-md-6">
-                    <h5 class="text-primary">معلومات البرنامج</h5>
-                    <ul class="list-unstyled">
-                      <li><strong>المدة:</strong> {{ program.duration }}</li>
-                      <li><strong>الدرجة العلمية:</strong> {{ program.degree }}</li>
-                      <li><strong>القسم:</strong> {{ program.department }}</li>
-                      <li><strong>منسق البرنامج:</strong> {{ program.coordinator }}</li>
-                    </ul>
-                  </div>
-                </div>
+ <div *ngIf="program?.about" class="quill-content description"
+                     [innerHTML]="program?.about | cleanHtml"></div>
+                                     <p *ngIf="!program?.about">لا توجد معلومات متاحة عن البرنامج.</p>
               </div>
 
               <div *ngIf="activeAboutSection === 'vision'">
                 <h3 class="text-brown mb-3">الرؤية</h3>
-                <p>{{ program?.vision }}</p>
-              </div>
+  <div class="quill-content description"
+                     [innerHTML]="program?.vision | cleanHtml"></div>
+                                  </div>
 
               <div *ngIf="activeAboutSection === 'mission'">
                 <h3 class="text-brown mb-3">الرسالة</h3>
-                <p>{{ program?.mission }}</p>
-              </div>
+ <div class="quill-content description"
+                     [innerHTML]="program?.mission | cleanHtml"></div>              </div>
 
               <div *ngIf="activeAboutSection === 'objectives'">
                 <h3 class="text-brown mb-3">الأهداف</h3>
                 <ul>
-                  <li *ngFor="let objective of program?.objectives">{{ objective }}</li>
-                </ul>
-              </div>
-
-              <div *ngIf="activeAboutSection === 'career'">
-                <h3 class="text-brown mb-3">الفرص الوظيفية</h3>
-                <ul>
-                  <li *ngFor="let opportunity of program?.careerOpportunities">{{ opportunity }}</li>
+                  <li *ngFor="let goal of program?.goals">{{ goal.goalName }}</li>
                 </ul>
               </div>
             </div>
@@ -160,159 +101,43 @@
       </div>
     </div>
 
-    <!-- Courses Tab Content -->
-    <div *ngIf="activeTab === 'courses'" class="col-12">
-      <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 mb-4">
-          <div class="list-group">
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              *ngFor="let course of courses"
-              [class.active]="selectedCourse?.id === course.id"
-              (click)="selectCourse(course)"
-            >
-              {{ course.name }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Content -->
-        <div class="col-md-9">
-          <div class="card" *ngIf="selectedCourse">
-            <div class="card-body">
-              <h3 class="text-brown mb-3">{{ selectedCourse.name }}</h3>
-              <p class="mb-3">{{ selectedCourse.description }}</p>
-              
-              <div class="row">
-                <div class="col-md-6">
-                  <h5 class="text-primary">معلومات المقرر</h5>
-                  <ul class="list-unstyled">
-                    <li><strong>عدد الوحدات:</strong> {{ selectedCourse.credits }} وحدة</li>
-                    <li><strong>الفصل الدراسي:</strong> {{ selectedCourse.semester }}</li>
-                  </ul>
-                </div>
-                
-                <div class="col-md-6" *ngIf="selectedCourse.prerequisites && selectedCourse.prerequisites.length > 0">
-                  <h5 class="text-primary">المتطلبات السابقة</h5>
-                  <ul>
-                    <li *ngFor="let prerequisite of selectedCourse.prerequisites">{{ prerequisite }}</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+    <!-- Details Tab Content -->
+    <div *ngIf="activeTab === 'details'" class="col-12">
+      <div class="card" *ngIf="programDetail?.title || programDetail?.content">
+        <div class="card-body">
+          <h3 class="text-brown mb-3">{{ programDetail?.title }}</h3>
+<div class="quill-content description mb-3"
+               [innerHTML]="programDetail?.content | cleanHtml"></div>
+                         <ul class="list-unstyled">
+            <!-- <li><strong>الفئة المستهدفة:</strong> {{ programDetail?.programCategory }}</li> -->
+            <!-- <li><strong>الكلية:</strong> {{ programDetail?.facultyName }}</li> -->
+          </ul>
         </div>
       </div>
-    </div>
-
-    <!-- Services Tab Content -->
-    <div *ngIf="activeTab === 'services'" class="col-12">
-      <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 mb-4">
-          <div class="list-group">
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              *ngFor="let service of services"
-              [class.active]="selectedService?.id === service.id"
-              (click)="selectService(service)"
-            >
-              {{ service.name }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Content -->
-        <div class="col-md-9">
-          <div class="card" *ngIf="selectedService">
-            <div class="card-body">
-              <h3 class="text-brown mb-3">{{ selectedService.name }}</h3>
-              <p class="mb-3">{{ selectedService.description }}</p>
-              
-              <div class="row">
-                <div class="col-md-6">
-                  <h5 class="text-primary">تفاصيل الخدمة</h5>
-                  <ul class="list-unstyled">
-                    <li><strong>التصنيف:</strong> {{ selectedService.category }}</li>
-                    <li *ngIf="selectedService.duration">
-                      <strong>المدة المقدرة:</strong> {{ selectedService.duration }}
-                    </li>
-                    <li *ngIf="selectedService.cost">
-                      <strong>التكلفة:</strong> {{ selectedService.cost }}
-                    </li>
-                    <li>
-                      <strong>الحالة:</strong> 
-                      <span [class]="selectedService.isActive ? 'text-success' : 'text-danger'">
-                        {{ selectedService.isActive ? 'متاحة' : 'غير متاحة' }}
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- News Tab Content -->
-    <div *ngIf="activeTab === 'news'" class="col-12">
-      <div class="row">
-        <div class="col-md-4 mb-4" *ngFor="let newsItem of programNews">
-          <div class="news-card">
-            <div class="news-card-image" *ngIf="newsItem.imageUrl">
-              <img [src]="newsItem.imageUrl" [alt]="newsItem.title" class="img-fluid">
-            </div>
-            <div class="news-card-body">
-              <div class="news-card-date">{{ newsItem.publishDate | date: 'yyyy/MM/dd' }}</div>
-              <h5 class="news-card-title">{{ newsItem.title }}</h5>
-              <p class="news-card-excerpt">{{ newsItem.excerpt }}</p>
-              <button
-                class="btn btn-medicine btn-sm"
-                (click)="goToNewsDetails(newsItem.id)"
-              >
-                اقرأ المزيد
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <p *ngIf="!programDetail?.title && !programDetail?.content">لا توجد معلومات متاحة.</p>
     </div>
 
     <!-- Members Tab Content -->
     <div *ngIf="activeTab === 'members'" class="col-12">
       <div class="card">
         <div class="card-body">
-          <h3 class="text-brown mb-3">فريق البرنامج</h3>
+          <h3 class="text-brown mb-3">هيئة التدريس</h3>
 
-          <div *ngIf="program?.coordinator" class="mb-4">
-            <h5 class="text-primary">منسق البرنامج</h5>
-            <p>{{ program?.coordinator }}</p>
-          </div>
-
-          <div *ngIf="program && program.members && program.members.length > 0">
-            <h5 class="text-primary">أعضاء فريق البرنامج</h5>
+          <div *ngIf="programMembers && programMembers.length > 0">
             <div class="row">
-              <div class="col-md-6 mb-3" *ngFor="let member of program.members!">
+              <div class="col-md-6 mb-3" *ngFor="let member of programMembers">
                 <div class="card">
                   <div class="card-body">
-                    <h6 class="card-title">{{ member.name }}</h6>
-                    <p class="card-text">{{ member.title }}</p>
-                    <p class="card-text"><strong>التخصص:</strong> {{ member.specialization }}</p>
-                    <p class="card-text" *ngIf="member.email"><strong>البريد الإلكتروني:</strong> {{ member.email }}</p>
-                    <p class="card-text" *ngIf="member.phone"><strong>الهاتف:</strong> {{ member.phone }}</p>
-                    <p class="card-text" *ngIf="member.office"><strong>المكتب:</strong> {{ member.office }}</p>
+                    <h6 class="card-title">{{ member.memberName }}</h6>
+                    <p><span *ngIf="member.isLeader">(منسق البرنامج)</span></p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div *ngIf="program && !program.coordinator && (!program.members || program.members.length === 0)">
-            <p>لا توجد معلومات متاحة عن فريق البرنامج.</p>
+          <div *ngIf="!programMembers || programMembers.length === 0">
+            <p>لا توجد معلومات متاحة عن هيئة التدريس.</p>
           </div>
         </div>
       </div>

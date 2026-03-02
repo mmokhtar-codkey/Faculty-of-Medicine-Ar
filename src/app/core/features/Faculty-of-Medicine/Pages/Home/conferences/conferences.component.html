@@ -5,18 +5,17 @@
 <div class="conferences-cards-container">
   <div class="conference-card" *ngFor="let conference of conferences">
     <div class="card-image">
-      <img [src]="conference.image" [alt]="conference.title" />
+      <img [src]="conference.featuredImagePath" [alt]="conference.title" />
     </div>
     <div class="card-content">
       <h3 class="card-title">{{ conference.title }}</h3>
       <div class="card-details">
         <div class="detail-item">
           <i class="fas fa-calendar-day"></i>
-          <span>{{ conference.date }}</span>
+          <span>{{ conference.createdDate | date: 'yyyy/MM/dd' }}</span>
         </div>
-       
       </div>
-      <a [routerLink]="['/conferences', conference.id]" class="card-link">
+      <a (click)="goToConferenceDetails(conference)" class="card-link">
         تفاصيل المؤتمر
         <i class="fas fa-arrow-left"></i>
       </a>
@@ -25,7 +24,7 @@
 </div>
 
 <div class="all-conferences-section">
-  <a [routerLink]="['/conferences']" class="all-conferences-btn">
+  <a [routerLink]="['/news']" [queryParams]="{filter: 'conferences'}" class="all-conferences-btn">
     مؤتمرات الكلية
   </a>
 </div>

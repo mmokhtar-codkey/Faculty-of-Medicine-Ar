@@ -1,28 +1,29 @@
 import { Injectable } from '@angular/core';
-import { ContactInfo } from '../model/contact.model';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
+import { Contact } from '../model/contact.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactService {
-  private contactInfo: ContactInfo = {
-    logoPath: 'assets/logo.png',
-    logoAlt: 'شعار كلية الطب جامعة الأقصر',
-    logoAltText: 'شعار كلية الطب جامعة الأقصر',
-    title: 'كلية الطب - جامعة الأقصر',
-    description: 'كلية الطب بجامعة الأقصر هي منارة علمية تهدف إلى إعداد أطباء مؤهلين وتقديم أفضل الخدمات الطبية للمجتمع.',
-    address: 'جامعة الأقصر، الأقصر، جمهورية مصر العربية',
-    phone: '+20 95 237 1234',
-    email: 'info@medicine.luxor.edu.eg'
-  };
+  private apiUrl = environment.apiUrl;
 
-  getContactInfo(): Observable<ContactInfo> {
-    return of(this.contactInfo);
+  constructor(private http: HttpClient) {}
+
+  // جلب كل بيانات التواصل
+  getAllContacts(): Observable<Contact[]> {
+    return this.http.get<{data: Contact[]}>(`${this.apiUrl}contacts/getall`).pipe(
+      map(response => response.data)
+    );
   }
 
-  updateContactInfo(info: Partial<ContactInfo>): Observable<ContactInfo> {
-    this.contactInfo = { ...this.contactInfo, ...info };
-    return of(this.contactInfo);
+  // جلب بيانات تواصل واحدة بالـ id
+  getContactById(id: string): Observable<Contact | undefined> {
+    return this.getAllContacts().pipe(
+      map(contacts => contacts.find(c => c.id === id))
+    );
   }
 }

@@ -19,16 +19,18 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: HomeComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'sectors/:id', component: SectorsComponent },
+     { path: 'sectors', component: SectorsComponent },
+
+      { path: 'sectors/:slug', component: SectorsComponent },
       { path: 'news', component: NewsListComponent },
-      { path: 'news/:id', component: NewsDetailsComponent },
-      { path: 'departments/:id', component: DepartmentsComponent },
-      { path: 'programs/:id', component: ProgramsComponent },
+      { path: 'news/:slug', component: NewsDetailsComponent },
+      { path: 'departments/:slug', component: DepartmentsComponent },
+      { path: 'programs/:slug', component: ProgramsComponent },
       { path: 'contact', component: ContactComponent },
-      { path: 'centers/:id', component: CentersComponent },
-      { path: 'units/:id', component: UnitsComponent },
-      { path: 'services/:id', component: ServicesComponent },
-      { path: 'about/:id', component: AboutComponent }
+      { path: 'centers/:slug', component: CentersComponent },
+      { path: 'units/:slug', component: UnitsComponent },
+      { path: 'services/:slug', component: ServicesComponent },
+      { path: 'about', component: AboutComponent }
     ]
   }
 ];

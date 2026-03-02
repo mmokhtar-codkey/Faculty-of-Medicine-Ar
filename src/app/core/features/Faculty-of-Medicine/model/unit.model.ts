@@ -1,77 +1,50 @@
+// الهدف (Goal) الخاص بالوحدة
+export interface UnitGoal {
+  id: string;
+  index: number;
+  goalName: string;
+  aboutId: string;
+}
+
+// المرفقات الخاصة بالوحدة
+export interface UnitAttachment {
+  id?: string;
+  filePath?: string;
+}
+
+// الموديل الأساسي للوحدة
 export interface Unit {
   id: string;
-  name: string;
-  description: string;
-  establishedDate: string;
-  vision?: string;
-  mission?: string;
-  objectives?: string[];
-  generalOverview?: string;
-  head?: string;
-  members?: FacultyMember[];
-  departments?: UnitDepartment[];
-  services?: UnitService[];
-  news?: UnitNews[];
+  pageId: string;
+  unitTitle: string;
+  unitTitleEn: string;
+  slug: string;
+  aboutId: string;
+  content: string;
+  mission: string;
+  vision: string;
+  history?: string | null;
+  goals: UnitGoal[];
+  unitAttachments: UnitAttachment[];
 }
 
-export interface UnitDepartment {
-  id: number;
-  name: string;
-  description: string;
-  head: string;
-  establishedDate: string;
-  location: string;
-  contactInfo: ContactInfo;
-  programs?: string[];
-  faculty?: FacultyMember[];
-}
-
-export interface UnitService {
-  id: number;
-  name: string;
-  description: string;
-  category: string;
-  isActive: boolean;
-  requirements?: string[];
-  procedures?: string[];
-  duration?: string;
-  cost?: string;
-}
-
-export interface UnitNews {
-  id: number;
+// تفاصيل إضافية للوحدة
+export interface UnitDetail {
+  id: string;
   title: string;
   content: string;
-  excerpt: string;
-  publishDate: string;
-  lastModified: string;
-  author: string;
-  category: NewsCategory;
-  imageUrl?: string;
-  tags?: string[];
-  isPublished: boolean;
-  views?: number;
+  unitPlace: string;
+  unitId: string;
+  unitTitle: string;
+  unitAttachments: UnitAttachment[];
 }
 
-export interface ContactInfo {
-  phone?: string;
-  email?: string;
-  office?: string;
-  website?: string;
-}
-
-export interface FacultyMember {
-  id: number;
-  name: string;
-  title: string;
-  email: string;
-  phone?: string;
-  office?: string;
-  specialization: string;
-}
-
-export enum NewsCategory {
-  NEWS = 'أخبار',
-  CONFERENCES = 'مؤتمرات',
-  EVENTS = 'فعاليات'
+// أعضاء الوحدة
+export interface UnitMember {
+  id: string;
+  isLeader: boolean;
+  unitId: string;
+  unitTitle: string;
+  memberId: string;
+  memberName: string;
 }

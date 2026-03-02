@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NewsService } from '../../Services/news.service';
-import { News, NewsCategory } from '../../model/sector.model';
+import { News } from '../../model/news.model';
+import { slugify } from '../../../../../utils/slugify';
+import { CleanHtmlPipe } from '../../../../pipes/clean-html.pipe'; // ✅ استدعاء الـ Pipe
+
 
 @Component({
   selector: 'app-news-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CleanHtmlPipe],
   templateUrl: './news-list.component.html',
   styleUrls: ['./news-list.component.css']
 })
@@ -18,20 +21,27 @@ export class NewsListComponent implements OnInit {
   
   activeFilter = 'all';
   currentPage = 1;
-  itemsPerPage = 9;
+  itemsPerPage = 6;
   totalPages = 1;
 
   constructor(
     private newsService: NewsService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.loadNews();
+    this.route.queryParams.subscribe(params => {
+      const filter = params['filter'];
+      if (filter && ['all', 'news', 'conferences', 'events'].includes(filter)) {
+        this.activeFilter = filter;
+      }
+      this.loadNews();
+    });
   }
 
   private loadNews(): void {
-    this.newsService.getAll().subscribe(news => {
+    this.newsService.getAllNews().subscribe(news => {
       this.allNews = news;
       this.applyFilter();
     });
@@ -46,13 +56,19 @@ export class NewsListComponent implements OnInit {
   private applyFilter(): void {
     switch (this.activeFilter) {
       case 'news':
-        this.filteredNews = this.allNews.filter(news => news.category === NewsCategory.NEWS);
+        this.filteredNews = this.allNews.filter(n =>
+          n.postCategories.some(c => c.categoryName === 'الأخبار')
+        );
         break;
       case 'conferences':
-        this.filteredNews = this.allNews.filter(news => news.category === NewsCategory.CONFERENCES);
+        this.filteredNews = this.allNews.filter(n =>
+          n.postCategories.some(c => c.categoryName.includes('مؤتمرات'))
+        );
         break;
       case 'events':
-        this.filteredNews = this.allNews.filter(news => news.category === NewsCategory.EVENTS);
+        this.filteredNews = this.allNews.filter(n =>
+          n.postCategories.some(c => c.categoryName.includes('فعاليات') || c.categoryName.includes('احداث'))
+        );
         break;
       default:
         this.filteredNews = [...this.allNews];
@@ -95,20 +111,15 @@ export class NewsListComponent implements OnInit {
     return pages;
   }
 
-  getCategoryBadgeClass(category: NewsCategory): string {
-    switch (category) {
-      case NewsCategory.NEWS:
-        return 'badge-primary';
-      case NewsCategory.CONFERENCES:
-        return 'badge-success';
-      case NewsCategory.EVENTS:
-        return 'badge-warning';
-      default:
-        return 'badge-secondary';
-    }
+  getCategoryBadgeClass(categoryName: string): string {
+    if (categoryName === 'الأخبار') return 'badge-primary';
+    if (categoryName.includes('مؤتمرات')) return 'badge-success';
+    if (categoryName.includes('فعاليات') || categoryName.includes('احداث')) return 'badge-warning';
+    return 'badge-secondary';
   }
 
-  goToNewsDetails(newsId: number): void {
-    this.router.navigate(['/news', newsId]);
+  goToNewsDetails(news: News): void {
+    // التوجيه بالـ slug بدل الـ id
+    this.router.navigate(['/news', slugify(news.title)]);
   }
 }

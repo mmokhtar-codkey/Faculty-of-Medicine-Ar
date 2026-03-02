@@ -1,61 +1,37 @@
 import { Injectable } from '@angular/core';
-import { Service } from '../model/service.model';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
+import { ServiceDetail } from '../model/service.model';
+import { slugify } from '../../../../utils/slugify';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiceService {
-  private services: Service[] = [
-    {
-      id: '1',
-      title: 'العيادات الخارجية',
-      description: 'خدمات طبية متخصصة في جميع التخصصات الطبية بأحدث المعايير العالمية.',
-      category: 'الخدمات الطبية',
-      type: 'طبي',
-      iconPath: 'assets/icons/clinic.svg',
-      url: '/services/outpatient-clinics'
-    },
-    {
-      id: '2',
-      title: 'المختبرات الطبية',
-      description: 'تحاليل طبية شاملة ودقيقة باستخدام أحدث التقنيات والأجهزة المتطورة.',
-      category: 'التحاليل الطبية',
-      type: 'تشخيصي',
-      iconPath: 'assets/icons/laboratory.svg',
-      url: '/services/medical-laboratories'
-    },
-    {
-      id: '3',
-      title: 'الأشعة التشخيصية',
-      description: 'خدمات الأشعة والتصوير الطبي بأحدث أجهزة الرنين المغناطيسي والأشعة المقطعية.',
-      category: 'التصوير الطبي',
-      type: 'تشخيصي',
-      iconPath: 'assets/icons/radiology.svg',
-      url: '/services/diagnostic-imaging'
-    },
- 
-  ];
+  private apiUrl = environment.apiUrl + 'services';
 
-  getAll(): Observable<Service[]> {
-    return of(this.services);
-  }
+  constructor(private http: HttpClient) {}
 
-  getById(id: string): Observable<Service | undefined> {
-    return of(this.services.find(service => service.id === id));
-  }
-
-  getByCategory(category: string): Observable<Service[]> {
-    const filtered = this.services.filter(service => 
-      service.category === category
+  // جلب كل الخدمات
+  getAll(): Observable<ServiceDetail[]> {
+    return this.http.get<{data: ServiceDetail[]}>(`${this.apiUrl}/getall`).pipe(
+      map(response => response.data)
     );
-    return of(filtered);
   }
 
-  getByType(type: string): Observable<Service[]> {
-    const filtered = this.services.filter(service => 
-      service.type === type
+  // جلب خدمة واحدة بالـ id (قديمة)
+  getById(id: string): Observable<ServiceDetail | undefined> {
+    return this.getAll().pipe(
+      map(services => services.find(s => s.id === id))
     );
-    return of(filtered);
+  }
+
+  // جلب خدمة واحدة بالـ slug (جديدة)
+  getBySlug(slug: string): Observable<ServiceDetail | undefined> {
+    return this.getAll().pipe(
+      map(services => services.find(s => slugify(s.slug) === slug))
+    );
   }
 }

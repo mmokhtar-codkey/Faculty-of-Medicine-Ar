@@ -5,19 +5,14 @@
   </div>
 
   <!-- Statistics Grid -->
-  <div class="statistics-grid" *ngIf="statistics.length">
+  <div class="statistics-grid">
     <div class="statistic-card" *ngFor="let statistic of statistics; trackBy: trackByFn">
       <div class="card-icon">
-        <i
-          [class]="statistic.iconPath"
-          [attr.aria-label]="statistic.iconAlt"
-          class="icon-image"
-        ></i>
+        <i [class]="statistic.iconPath" class="icon-image"></i>
       </div>
       <div class="card-content">
         <div class="statistic-value">{{ statistic.value }}</div>
         <h4 class="card-title">{{ statistic.title }}</h4>
-        <p class="card-description">{{ statistic.description }}</p>
       </div>
     </div>
   </div>

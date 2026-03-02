@@ -1,76 +1,32 @@
- <div class="medicine-news-section" *ngIf="newsItems.length > 0">
-      <!-- Section Header -->
-      <div class="section-header" *ngIf="showTitle">
-        <div class="container">
-          <h2 class="section-title">{{ sectionTitle }}</h2>
-        </div>
-      </div>
-
-      <!-- News Cards Grid -->
-      <div class="container">
-        <div class="news-grid" 
-             [class.single-column]="itemsPerView === 1"
-             [class.two-columns]="itemsPerView === 2"
-             [class.three-columns]="itemsPerView === 3">
-          
-          <article class="news-card" 
-                   *ngFor="let item of visibleItems; trackBy: trackByFn; let i = index"
-                   [style.animation-delay]="i * 0.1 + 's'"
-                   tabindex="0"
-                   (click)="onCardClick($event, item.readMoreUrl)"
-                   (keydown.enter)="onCardClick($event, item.readMoreUrl)"
-                   (keydown.space)="onCardClick($event, item.readMoreUrl)">
-            
-            <div class="card-image">
-              <img [src]="item.imageUrl" [alt]="item.title" loading="lazy">
-              <div class="date-badge">
-                <span class="day">{{ getDateParts(item.publishDate).day }}</span>
-                <span class="month">{{ getDateParts(item.publishDate).month }}</span>
-              </div>
-            </div>
-
-            <div class="card-content">
-              <div class="author-info">
-                <span class="author">بواسطة {{ item.author }}</span> / <span class="specialty">{{ item.category }}</span>
-              </div>
-              <h3 class="card-title">{{ item.title }}</h3>
-              <p class="card-excerpt">{{ item.excerpt }}</p>
-              <a [href]="item.readMoreUrl || '#'" 
-                 class="read-more" 
-                 *ngIf="item.readMoreUrl"
-                 (click)="onReadMoreClick($event)">
-                تفاصيل الخبر <i class="fas fa-arrow-left" [class.fa-arrow-right]="!isRTL"></i>
-              </a>
-            </div>
-          </article>
-        </div>
-
-        <!-- Navigation Controls -->
-        <div class="navigation-controls" *ngIf="newsItems.length > itemsPerView">
-          <button class="nav-btn prev-btn"
-                  [disabled]="!hasPrev"
-                  [class.disabled]="!hasPrev"
-                  (click)="prevSlide()"
-                  aria-label="Previous news">
-            <i class="fas fa-chevron-right" [class.fa-chevron-left]="!isRTL"></i>
-          </button>
-          
-          <div class="pagination-dots">
-            <button *ngFor="let page of getPaginationPages(); let i = index"
-                    class="dot"
-                    [class.active]="i === getCurrentPageIndex()"
-                    (click)="goToPage(i)"
-                    [attr.aria-label]="'Go to page ' + (i + 1)">
-            </button>
-          </div>
-          
-          <button class="nav-btn next-btn"
-                  [disabled]="!hasNext"
-                  [class.disabled]="!hasNext"
-                  (click)="nextSlide()"
-                  aria-label="Next news">
-            <i class="fas fa-chevron-left" [class.fa-chevron-right]="!isRTL"></i>
-          </button>
-        </div>
-      </div>
+<div class="medicine-news-section" *ngIf="newsItems.length > 0">
+  <!-- Section Header -->
+  <div class="section-header" *ngIf="showTitle">
+    <div class="container">
+      <h2 class="section-title">{{ sectionTitle }}</h2>
     </div>
+  </div>
+
+  <!-- News Cards Grid -->
+  <div class="container">
+    <div class="news-grid three-columns">
+      <article class="news-card"
+               *ngFor="let item of visibleItems; trackBy: trackByFn"
+               (click)="goToNewsDetails(item)">
+        
+        <div class="card-image">
+          <img [src]="item.featuredImagePath" [alt]="item.title" loading="lazy">
+          <div class="date-badge">
+            <span class="day">{{ getDateParts(item.createdDate).day }}</span>
+            <span class="month">{{ getDateParts(item.createdDate).month }}</span>
+          </div>
+        </div>
+
+        <div class="card-content">
+          <h3 class="card-title">{{ item.title }}</h3>
+          <!-- <p class="card-excerpt">{{ item.content | slice:0:100 }}...</p> -->
+          <a class="read-more">تفاصيل الخبر <i class="fas fa-arrow-left" [class.fa-arrow-right]="!isRTL"></i></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>

@@ -1,35 +1,53 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ContactService } from '../../../../Services/contact.service';
-import { ContactInfo } from '../../../../model/contact.model';
+import { LogoService } from '../../../../Services/logo.service';
+import { Contact } from '../../../../model/contact.model';
+import { Logo } from '../../../../model/logo.model';
 
 @Component({
   selector: 'app-medicine-logo',
   standalone: true,
-  imports: [CommonModule],
- templateUrl: './medicine-logo.component.html',
+  imports: [CommonModule, RouterModule],
+  templateUrl: './medicine-logo.component.html',
   styleUrls: ['./medicine-logo.component.css']
 })
 export class MedicineLogoComponent implements OnInit {
-  logoData: ContactInfo = {} as ContactInfo;
-  contactInfo: ContactInfo = {} as ContactInfo;
+  contact?: Contact;
+  logoUrl?: string;
 
-  constructor(private contactService: ContactService) {}
+  constructor(
+    private contactService: ContactService,
+    private logoService: LogoService
+  ) {}
 
   ngOnInit(): void {
-    this.loadContactInfo();
+    this.loadContact();
+    this.loadLogo();
   }
 
-  private loadContactInfo(): void {
-    this.contactService.getContactInfo().subscribe(info => {
-      this.logoData = info;
-      this.contactInfo = info;
+  private loadContact(): void {
+    this.contactService.getAllContacts().subscribe(contacts => {
+      if (contacts && contacts.length > 0) {
+        this.contact = contacts[0];
+      }
+    });
+  }
+
+  private loadLogo(): void {
+    this.logoService.getDefaultLogo().subscribe((logo: Logo | undefined) => {
+      if (logo) {
+        this.logoUrl = logo.url;
+      }
     });
   }
 
   openLocation(): void {
-    const address = encodeURIComponent(this.contactInfo.address);
-    window.open(`https://www.google.com/maps/search/${address}`, '_blank');
+    if (this.contact?.address) {
+      const address = encodeURIComponent(this.contact.address);
+      window.open(`https://www.google.com/maps/search/${address}`, '_blank');
+    }
   }
 
   openPhone(phone: string): void {
@@ -37,6 +55,8 @@ export class MedicineLogoComponent implements OnInit {
   }
 
   openEmail(): void {
-    window.location.href = `mailto:${this.contactInfo.email}`;
+    if (this.contact?.email) {
+      window.location.href = `mailto:${this.contact.email}`;
+    }
   }
 }

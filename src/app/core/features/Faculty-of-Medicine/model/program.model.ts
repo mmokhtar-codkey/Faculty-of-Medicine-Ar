@@ -1,78 +1,49 @@
-export interface ProgramDetails {
-  id: number;
-  name: string;
-  description: string;
-  establishedDate: string;
-  vision?: string;
-  mission?: string;
-  objectives?: string[];
-  generalOverview?: string;
-  coordinator?: string;
-  members?: ProgramMember[];
-  courses?: Course[];
-  services?: ProgramService[];
-  news?: ProgramNews[];
-  duration: string;
-  degree: string;
-  department: string;
-  careerOpportunities?: string[];
+// الهدف (Goal) الخاص بالبرنامج
+export interface ProgramGoal {
+  id: string;
+  index: number;
+  goalName: string;
+  aboutId: string;
 }
 
-export interface Course {
-  id: number;
-  name: string;
-  description: string;
-  credits: number;
-  semester: string;
-  prerequisites?: string[];
+// المرفقات الخاصة بالبرنامج
+export interface ProgramAttachment {
+  id?: string;
+  filePath?: string;
 }
 
-export interface ProgramService {
-  id: number;
-  name: string;
-  description: string;
-  category: string;
-  isActive: boolean;
-  requirements?: string[];
-  procedures?: string[];
-  duration?: string;
-  cost?: string;
+// الموديل الأساسي للبرنامج
+export interface Program {
+  id: string;
+  pageId: string;
+  pageTitle: string;
+  slug:string;
+  aboutId: string;
+  about: string;
+  mission: string;
+  vision: string;
+  goals: ProgramGoal[];
+  programAttachments: ProgramAttachment[];
 }
 
-export interface ProgramNews {
-  id: number;
+// تفاصيل إضافية للبرنامج
+export interface ProgramDetail {
+  id: string;
   title: string;
   content: string;
-  excerpt: string;
-  publishDate: string;
-  lastModified: string;
-  author: string;
-  category: ProgramNewsCategory;
-  imageUrl?: string;
-  tags?: string[];
-  isPublished: boolean;
-  views?: number;
+  programCategory: string;
+  facultyId: string;
+  facultyName: string;
+  programId: string;
+  programName: string;
 }
 
-export interface ProgramContactInfo {
-  phone?: string;
-  email?: string;
-  office?: string;
-  website?: string;
-}
-
+// أعضاء البرنامج
 export interface ProgramMember {
-  id: number;
-  name: string;
-  title: string;
-  email: string;
-  phone?: string;
-  office?: string;
-  specialization: string;
-}
-
-export enum ProgramNewsCategory {
-  NEWS = 'أخبار',
-  CONFERENCES = 'مؤتمرات',
-  EVENTS = 'فعاليات'
+  id: string;
+  isLeader: boolean;
+  programId: string;
+  programName: string;
+  memberId: string;
+  memberName: string;
 }

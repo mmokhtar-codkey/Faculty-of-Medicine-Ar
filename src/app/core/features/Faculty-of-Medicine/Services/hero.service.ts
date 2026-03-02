@@ -1,53 +1,39 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
 import { HeroSlide } from '../model/hero-slide.model';
-import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HeroService {
-  private heroSlides: HeroSlide[] = [
-    {
-      id: 1,
-      title: 'مرحباً بكم في كلية الطب',
-      subtitle: 'نحو مستقبل أفضل في التعليم الطبي والبحث العلمي',
-      description: 'كلية الطب بجامعة الأقصر تقدم أفضل المعايير التعليمية والبحثية في المجال الطبي',
-      imageUrl: 'https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      buttonText: 'اكتشف المزيد',
-      buttonUrl: '/about',
-      position: 'center'
-    },
-    {
-      id: 2,
-      title: 'التميز في التعليم الطبي',
-      subtitle: 'برامج أكاديمية متقدمة وأساتذة متميزون',
-      description: 'نوفر بيئة تعليمية متكاملة لإعداد أطباء المستقبل',
-      imageUrl: 'https://images.pexels.com/photos/4225881/pexels-photo-4225881.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      buttonText: 'البرامج الأكاديمية',
-      buttonUrl: '/departments',
-      position: 'center'
-    },
-    {
-      id: 3,
-      title: 'البحث العلمي والابتكار',
-      subtitle: 'نساهم في تقدم العلوم الطبية من خلال البحث والابتكار',
-      description: 'مختبرات متطورة ومشاريع بحثية رائدة',
-      imageUrl: 'https://images.pexels.com/photos/2280568/pexels-photo-2280568.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      buttonText: 'البحث العلمي',
-      buttonUrl: '/research',
-      position: 'center'
-    }
-  ];
+  private apiUrl = environment.apiUrl;
 
+  constructor(private http: HttpClient) {}
+
+  // جلب كل الشرائح من الـ API وتحويلها لموديل HeroSlide
   getAll(): Observable<HeroSlide[]> {
-    return of(this.heroSlides);
-  }
+    return this.http.get<{data: any[]}>(`${this.apiUrl}herosections/getall`).pipe(
+      map(response => {
+        return response.data.map(item => {
+          const imageUrl = item.heroAttachments && item.heroAttachments.length > 0
+            ? item.heroAttachments[0].url
+            : '';
 
-  getById(id: number): Observable<HeroSlide | undefined> {
-    return of(this.heroSlides.find(slide => slide.id === id));
-  }
-
-  getActive(): Observable<HeroSlide[]> {
-    return of(this.heroSlides);
+          return {
+            id: item.id,
+            title: item.title,
+            subtitle: item.subTitle,
+            description: item.description,
+            imageUrl: imageUrl,
+            buttonText: 'اكتشف المزيد',   // ممكن نخليها ثابتة أو نجيبها من الـ API لو موجودة
+            buttonUrl: '/about',          // نفس الشيء
+            position: 'center'            // ثابتة لأن الكومبونانت بيعرضها في المنتصف
+          } as HeroSlide;
+        });
+      })
+    );
   }
 }

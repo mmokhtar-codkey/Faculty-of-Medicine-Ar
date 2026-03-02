@@ -1,41 +1,51 @@
-  <div class="medicine-hero-section" *ngIf="slides.length > 0">
-      <div class="hero-carousel">
-        <div class="hero-slide" *ngFor="let slide of slides; let i = index"
-             [class.active]="i === currentSlideIndex"
-             (mouseenter)="onMouseEnter()"
-             (mouseleave)="onMouseLeave()">
+<div class="medicine-hero-section" *ngIf="slides.length > 0 && !isLoading">
+    <div class="hero-carousel">
+      <div class="hero-slide" *ngFor="let slide of slides; let i = index"
+           [class.active]="i === currentSlideIndex"
+           (mouseenter)="onMouseEnter()"
+           (mouseleave)="onMouseLeave()">
 
-          <!-- Background -->
-          <div class="hero-background" [style.background-image]="'url(' + slide.imageUrl + ')'"></div>
+        <!-- Background -->
+        <div class="hero-background" [style.background-image]="'url(' + slide.imageUrl + ')'"></div>
 
-          <!-- Content (always center + fixed animation) -->
-          <div class="hero-content caption-center animated fadeInUp">
-            <div class="hero-caption">
-              <h1 class="hero-title">{{ slide.title }}</h1>
-              <p class="hero-subtitle">{{ slide.subtitle }}</p>
-              <a [routerLink]="buttonRoute" class="hero-button">{{ buttonText }}</a>
-            </div>
+        <!-- Content (right side caption) -->
+        <div class="hero-content caption-right animated fadeInUp">
+          <div class="hero-caption">
+            <h1 class="hero-title">{{ slide.title }}</h1>
+            <p class="hero-subtitle">{{ slide.subtitle }}</p>
+            <a [routerLink]="buttonRoute" class="hero-button">{{ buttonText }}</a>
           </div>
         </div>
       </div>
-
-      <!-- Controls -->
-      <div class="hero-controls" *ngIf="slides.length > 1">
-        <button class="control-btn prev-btn" (click)="prevSlide()" aria-label="الشريحة السابقة">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-        <button class="control-btn next-btn" (click)="nextSlide()" aria-label="الشريحة التالية">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-      </div>
-
-      <!-- Indicators -->
-      <div class="hero-indicators" *ngIf="slides.length > 1">
-        <button *ngFor="let slide of slides; let i = index"
-                class="indicator"
-                [class.active]="i === currentSlideIndex"
-                (click)="goToSlide(i)"
-                [attr.aria-label]="'الذهاب إلى الشريحة ' + (i + 1)">
-        </button>
-      </div>
     </div>
+
+    <!-- Controls -->
+    <div class="hero-controls" *ngIf="slides.length > 1">
+      <button class="control-btn prev-btn" (click)="prevSlide()" aria-label="الشريحة السابقة">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+      <button class="control-btn next-btn" (click)="nextSlide()" aria-label="الشريحة التالية">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+    </div>
+
+    <!-- Indicators -->
+    <div class="hero-indicators" *ngIf="slides.length > 1">
+      <button *ngFor="let slide of slides; let i = index"
+              class="indicator"
+              [class.active]="i === currentSlideIndex"
+              (click)="goToSlide(i)"
+              [attr.aria-label]="'الذهاب إلى الشريحة ' + (i + 1)">
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Placeholder -->
+  <div class="medicine-hero-section loading-placeholder" *ngIf="isLoading">
+    <div class="loading-skeleton"></div>
+    <div class="loading-content">
+      <div class="skeleton-title"></div>
+      <div class="skeleton-subtitle"></div>
+      <div class="skeleton-button"></div>
+    </div>
+  </div>

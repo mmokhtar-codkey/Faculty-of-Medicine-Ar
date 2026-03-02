@@ -15,7 +15,7 @@ export class StatisticsComponent implements OnInit {
 
   statistics: Statistic[] = [];
 
-  constructor(private statisticsService: StatisticsService) { }
+  constructor(private statisticsService: StatisticsService) {}
 
   ngOnInit(): void {
     this.loadStatistics();
@@ -26,9 +26,8 @@ export class StatisticsComponent implements OnInit {
   }
 
   private loadStatistics(): void {
-    this.statisticsService.getAll().subscribe(statistics => {
-      this.statistics = statistics;
+    this.statisticsService.getAll().subscribe(res => {
+      this.statistics = res.filter(stat => stat.isActive); // نعرض بس الـ active
     });
   }
-
 }

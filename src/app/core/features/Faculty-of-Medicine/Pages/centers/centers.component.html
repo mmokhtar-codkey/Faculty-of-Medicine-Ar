@@ -1,7 +1,7 @@
 <div class="container section">
   <!-- Center Title Section -->
-  <div class="sector-header bg-primary text-white p-4 mb-4 rounded">
-    <h1 class="mb-0">{{ center?.name || 'جاري تحميل البيانات...' }}</h1>
+  <div class="sector-header text-white p-4 mb-4 rounded">
+    <h1 class="text-brown">{{ center?.centerName || 'جاري تحميل البيانات...' }}</h1>
   </div>
 
   <!-- Horizontal Tabs -->
@@ -20,31 +20,11 @@
       <li class="nav-item">
         <button 
           class="nav-link" 
-          [class.active]="activeTab === 'departments'"
-          (click)="switchTab('departments')"
-          type="button"
-        >
-          أقسام المركز / الوحدات
-        </button>
-      </li>
-      <li class="nav-item">
-        <button
-          class="nav-link"
-          [class.active]="activeTab === 'news'"
-          (click)="switchTab('news')"
-          type="button"
-        >
-          أخبار المركز
-        </button>
-      </li>
-      <li class="nav-item">
-        <button 
-          class="nav-link" 
           [class.active]="activeTab === 'services'"
           (click)="switchTab('services')"
           type="button"
         >
-          خدمات المركز
+          تفاصيل المركز
         </button>
       </li>
       <li class="nav-item">
@@ -68,36 +48,20 @@
         <!-- Sidebar -->
         <div class="col-md-3 mb-4">
           <div class="list-group">
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'overview'"
-              (click)="switchAboutSection('overview')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'overview'" (click)="switchAboutSection('overview')">
               نظرة عامة
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'vision'"
-              (click)="switchAboutSection('vision')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'vision'" (click)="switchAboutSection('vision')">
               الرؤية
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'mission'"
-              (click)="switchAboutSection('mission')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'mission'" (click)="switchAboutSection('mission')">
               الرسالة
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'objectives'"
-              (click)="switchAboutSection('objectives')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'objectives'" (click)="switchAboutSection('objectives')">
               الأهداف
             </button>
           </div>
@@ -109,23 +73,25 @@
             <div class="card-body">
               <div *ngIf="activeAboutSection === 'overview'">
                 <h3 class="text-brown mb-3">نظرة عامة</h3>
-                <p>{{ center?.generalOverview }}</p>
+<div *ngIf="center?.about" class="quill-content description"
+                     [innerHTML]="center?.about | cleanHtml"></div>
+                                     <p *ngIf="!center?.about">لا توجد معلومات متاحة عن المركز.</p>
               </div>
 
               <div *ngIf="activeAboutSection === 'vision'">
                 <h3 class="text-brown mb-3">الرؤية</h3>
-                <p>{{ center?.vision }}</p>
-              </div>
+<div class="quill-content description"
+                     [innerHTML]="center?.vision | cleanHtml"></div>              </div>
 
               <div *ngIf="activeAboutSection === 'mission'">
                 <h3 class="text-brown mb-3">الرسالة</h3>
-                <p>{{ center?.mission }}</p>
-              </div>
+<div class="quill-content description"
+                     [innerHTML]="center?.mission | cleanHtml"></div>              </div>
 
               <div *ngIf="activeAboutSection === 'objectives'">
                 <h3 class="text-brown mb-3">الأهداف</h3>
                 <ul>
-                  <li *ngFor="let objective of center?.objectives">{{ objective }}</li>
+                  <li *ngFor="let goal of center?.goals">{{ goal.goalName }}</li>
                 </ul>
               </div>
             </div>
@@ -134,135 +100,19 @@
       </div>
     </div>
 
-    <!-- Departments Tab Content -->
-    <div *ngIf="activeTab === 'departments'" class="col-12">
-      <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 mb-4">
-          <div class="list-group">
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              *ngFor="let department of departments"
-              [class.active]="selectedDepartment?.id === department.id"
-              (click)="selectDepartment(department)"
-            >
-              {{ department.name }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Content -->
-        <div class="col-md-9">
-          <div class="card" *ngIf="selectedDepartment">
-            <div class="card-body">
-              <h3 class="text-brown mb-3">{{ selectedDepartment.name }}</h3>
-              <p class="mb-3">{{ selectedDepartment.description }}</p>
-              
-              <div class="row">
-                <div class="col-md-6">
-                  <h5 class="text-primary">معلومات القسم</h5>
-                  <ul class="list-unstyled">
-                    <li><strong>رئيس القسم:</strong> {{ selectedDepartment.head }}</li>
-                    <li><strong>تاريخ التأسيس:</strong> {{ selectedDepartment.establishedDate | date: 'yyyy/MM/dd' }}</li>
-                    <li><strong>الموقع:</strong> {{ selectedDepartment.location }}</li>
-                  </ul>
-                </div>
-                
-                <div class="col-md-6">
-                  <h5 class="text-primary">معلومات الاتصال</h5>
-                  <ul class="list-unstyled">
-                    <li *ngIf="selectedDepartment.contactInfo.phone">
-                      <strong>الهاتف:</strong> {{ selectedDepartment.contactInfo.phone }}
-                    </li>
-                    <li *ngIf="selectedDepartment.contactInfo.email">
-                      <strong>البريد الإلكتروني:</strong> {{ selectedDepartment.contactInfo.email }}
-                    </li>
-                    <li *ngIf="selectedDepartment.contactInfo.office">
-                      <strong>المكتب:</strong> {{ selectedDepartment.contactInfo.office }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Services Tab Content -->
+    <!-- details Tab Content -->
     <div *ngIf="activeTab === 'services'" class="col-12">
-      <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 mb-4">
-          <div class="list-group">
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              *ngFor="let service of services"
-              [class.active]="selectedService?.id === service.id"
-              (click)="selectService(service)"
-            >
-              {{ service.name }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Content -->
-        <div class="col-md-9">
-          <div class="card" *ngIf="selectedService">
-            <div class="card-body">
-              <h3 class="text-brown mb-3">{{ selectedService.name }}</h3>
-              <p class="mb-3">{{ selectedService.description }}</p>
-              
-              <div class="row">
-                <div class="col-md-6">
-                  <h5 class="text-primary">تفاصيل الخدمة</h5>
-                  <ul class="list-unstyled">
-                    <li><strong>التصنيف:</strong> {{ selectedService.category }}</li>
-                    <li *ngIf="selectedService.duration">
-                      <strong>المدة المقدرة:</strong> {{ selectedService.duration }}
-                    </li>
-                    <li *ngIf="selectedService.cost">
-                      <strong>التكلفة:</strong> {{ selectedService.cost }}
-                    </li>
-                    <li>
-                      <strong>الحالة:</strong> 
-                      <span [class]="selectedService.isActive ? 'text-success' : 'text-danger'">
-                        {{ selectedService.isActive ? 'متاحة' : 'غير متاحة' }}
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="card" *ngIf="centerDetail?.title || centerDetail?.description || centerDetail?.content">
+        <div class="card-body">
+          <h3 class="text-brown mb-3">{{ centerDetail?.title }}</h3>
+           <div class="quill-content description mb-3"
+               [innerHTML]="centerDetail?.description | cleanHtml"></div>
+          <div class="quill-content description"
+               [innerHTML]="centerDetail?.content | cleanHtml"></div>
+        
         </div>
       </div>
-    </div>
-
-    <!-- News Tab Content -->
-    <div *ngIf="activeTab === 'news'" class="col-12">
-      <div class="row">
-        <div class="col-md-4 mb-4" *ngFor="let newsItem of centerNews">
-          <div class="news-card">
-            <div class="news-card-image" *ngIf="newsItem.imageUrl">
-              <img [src]="newsItem.imageUrl" [alt]="newsItem.title" class="img-fluid">
-            </div>
-            <div class="news-card-body">
-              <div class="news-card-date">{{ newsItem.publishDate | date: 'yyyy/MM/dd' }}</div>
-              <h5 class="news-card-title">{{ newsItem.title }}</h5>
-              <p class="news-card-excerpt">{{ newsItem.excerpt }}</p>
-              <button
-                class="btn btn-medicine btn-sm"
-                (click)="goToNewsDetails(newsItem.id)"
-              >
-                اقرأ المزيد
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <p *ngIf="!centerDetail?.title && !centerDetail?.description && !centerDetail?.content">لا توجد معلومات متاحة.</p>
     </div>
 
     <!-- Members Tab Content -->
@@ -271,30 +121,20 @@
         <div class="card-body">
           <h3 class="text-brown mb-3">أعضاء المركز</h3>
 
-          <div *ngIf="center?.head" class="mb-4">
-            <h5 class="text-primary">رئيس المركز</h5>
-            <p>{{ center?.head }}</p>
-          </div>
-
-          <div *ngIf="center && center.members && center.members.length > 0">
-            <h5 class="text-primary">أعضاء المركز</h5>
+          <div *ngIf="centerMembers && centerMembers.length > 0">
             <div class="row">
-              <div class="col-md-6 mb-3" *ngFor="let member of center.members!">
+              <div class="col-md-6 mb-3" *ngFor="let member of centerMembers">
                 <div class="card">
                   <div class="card-body">
-                    <h6 class="card-title">{{ member.name }}</h6>
-                    <p class="card-text">{{ member.title }}</p>
-                    <p class="card-text"><strong>التخصص:</strong> {{ member.specialization }}</p>
-                    <p class="card-text" *ngIf="member.email"><strong>البريد الإلكتروني:</strong> {{ member.email }}</p>
-                    <p class="card-text" *ngIf="member.phone"><strong>الهاتف:</strong> {{ member.phone }}</p>
-                    <p class="card-text" *ngIf="member.office"><strong>المكتب:</strong> {{ member.office }}</p>
+                    <h6 class="card-title">{{ member.memberName }}</h6>
+                    <p><span *ngIf="member.isLeader">(رئيس المركز)</span></p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div *ngIf="center && !center.head && (!center.members || center.members.length === 0)">
+          <div *ngIf="!centerMembers || centerMembers.length === 0">
             <p>لا توجد معلومات متاحة عن أعضاء المركز.</p>
           </div>
         </div>

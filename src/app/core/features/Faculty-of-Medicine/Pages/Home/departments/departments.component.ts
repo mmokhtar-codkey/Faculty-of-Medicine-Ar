@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { DepartmentsService } from '../../../../Faculty-of-Medicine/Services/departments.service';
 import { Department } from '../../../model/department.model';
+import { slugify } from '../../../../../../utils/slugify';
 
 @Component({
   selector: 'app-departments',
@@ -12,7 +13,7 @@ import { Department } from '../../../model/department.model';
   styleUrls: ['./departments.component.css']
 })
 export class DepartmentsComponent implements OnInit {
-  @Input() sectionTitle = 'الأقسام الأكاديمية';
+  @Input() sectionTitle = 'الأقسام';
   @Input() showAllServicesButton = true;
   @Input() allServicesText = 'جميع الأقسام';
   @Input() allServicesUrl = '/departments';
@@ -20,6 +21,8 @@ export class DepartmentsComponent implements OnInit {
   @Output() departmentClicked = new EventEmitter<Department>();
 
   departments: Department[] = [];
+  academicDepartments: Department[] = [];
+  clinicalDepartments: Department[] = [];
 
   constructor(
     private departmentService: DepartmentsService,
@@ -35,13 +38,22 @@ export class DepartmentsComponent implements OnInit {
   }
 
   private loadDepartments(): void {
-    this.departmentService.getAll().subscribe(departments => {
+    this.departmentService.getAllDepartments().subscribe(departments => {
       this.departments = departments;
+
+      // فلترة الأقسام حسب النوع
+      this.academicDepartments = departments
+        .filter(d => d.departmentType === 'AcademicDepartments')
+        .slice(0, 3);
+
+      this.clinicalDepartments = departments
+        .filter(d => d.departmentType === 'ClinicalDepartments')
+        .slice(0, 3);
     });
   }
 
   onDepartmentClick(department: Department): void {
     this.departmentClicked.emit(department);
-    this.router.navigate(['/departments', department.id]);
+    this.router.navigate(['/departments', slugify(department.name)]);
   }
 }

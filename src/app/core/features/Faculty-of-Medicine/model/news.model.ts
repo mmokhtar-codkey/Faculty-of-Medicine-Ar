@@ -1,38 +1,35 @@
+// تصنيفات الخبر
+export interface PostCategory {
+  id: string;
+  postId: string;
+  categoryId: string;
+  categoryName: string;
+}
+
+// مرفقات الخبر (صور / ملفات)
+export interface PostAttachment {
+  id: string;
+  fileName: string;
+  isPublic: boolean;
+  relativePath: string;
+  folderName: string;
+  url: string;
+  postId: string;
+}
+
+// الموديل الأساسي للخبر
 export interface News {
-  id: number;
+  id: string;
   title: string;
+  urlTitleEn: string;
   content: string;
-  excerpt: string;
-  publishDate: string;
-  lastModified: string;
-  author: string;
-  category: NewsCategory;
-  imageUrl?: string;
-  tags?: string[];
-  isPublished: boolean;
-  views?: number;
-  readMoreUrl?: string;
-}
-
-export interface ContactInfo {
-  phone?: string;
-  email?: string;
-  office?: string;
-  website?: string;
-}
-
-export interface FacultyMember {
-  id: number;
-  name: string;
-  title: string;
-  email: string;
-  phone?: string;
-  office?: string;
-  specialization: string;
-}
-
-export enum NewsCategory {
-  NEWS = 'أخبار',
-  CONFERENCES = 'مؤتمرات',
-  EVENTS = 'فعاليات'
+  status: string;
+  publishedDate: string | null;
+  featuredImagePath: string;
+  pageId: string;
+  pageTittle: string;
+  createdDate: string;
+  postCategories: PostCategory[];
+  postAttachments: PostAttachment[];
+  tags: string[];
 }

@@ -1,284 +1,50 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { About, AboutDepartment, AboutService as AboutServiceModel, AboutNews, NewsCategory } from '../model/about.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
+import { AboutUniversity, Member } from '../model/about.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AboutService {
-  
-  private aboutData: About[] = [
-    {
-      id: '1',
-      name: 'رؤية ورسالة الكلية',
-      description: 'كلية الطب بجامعة الأقصر هي إحدى الكليات الرائدة في مجال التعليم الطبي والبحث العلمي في صعيد مصر',
-      establishedDate: '2006-09-15',
-      vision: 'أن تكون كلية الطب بجامعة الأقصر مؤسسة تعليمية وبحثية رائدة في مجال الطب والعلوم الصحية على المستوى المحلي والإقليمي والدولي، تساهم في تخريج أطباء مؤهلين ومتميزين قادرين على خدمة المجتمع وتطوير الرعاية الصحية.',
-      mission: 'تلتزم كلية الطب بجامعة الأقصر بتقديم تعليم طبي متميز وإجراء بحوث علمية مبتكرة وتقديم خدمات صحية عالية الجودة للمجتمع، من خلال بيئة تعليمية محفزة تعتمد على أحدث التقنيات والمعايير العالمية، وتهدف إلى إعداد كوادر طبية مؤهلة ومتخصصة قادرة على مواجهة التحديات الصحية المعاصرة.',
-      objectives: [
-        'تقديم تعليم طبي متميز يواكب أحدث التطورات العلمية والتكنولوجية',
-        'إعداد أطباء مؤهلين ومتخصصين قادرين على تقديم رعاية صحية عالية الجودة',
-        'تطوير البحث العلمي والابتكار في مجال الطب والعلوم الصحية',
-        'تقديم خدمات صحية متميزة للمجتمع المحلي والإقليمي',
-        'بناء شراكات استراتيجية مع المؤسسات الطبية والأكاديمية المحلية والدولية',
-        'تطوير قدرات أعضاء هيئة التدريس والباحثين',
-        'تحسين البنية التحتية والمرافق التعليمية والبحثية',
-        'تعزيز دور الكلية في خدمة المجتمع والتنمية المستدامة'
-      ],
-      generalOverview: 'تأسست كلية الطب بجامعة الأقصر في عام 2006 كجزء من رؤية جامعة الأقصر لتطوير التعليم العالي في صعيد مصر. تقع الكلية في مدينة الأقصر التاريخية، وتضم مجموعة من التخصصات الطبية المتنوعة والمتطورة. تسعى الكلية إلى تحقيق التميز في التعليم الطبي والبحث العلمي وخدمة المجتمع، من خلال برامج أكاديمية متطورة وأعضاء هيئة تدريس متخصصين ومرافق حديثة مجهزة بأحدث التقنيات الطبية.',
-      head: 'أ.د. محمد عبد الرحمن الطيب - عميد الكلية',
-      members: [
-        {
-          id: 1,
-          name: 'أ.د. سامية أحمد محمود',
-          title: 'وكيل الكلية لشؤون التعليم والطلاب',
-          email: 'samia.ahmed@med.luxor.edu.eg',
-          phone: '+20 95 123 4500',
-          office: 'مكتب الوكيل - الدور الثاني',
-          specialization: 'طب الأطفال'
-        },
-        {
-          id: 2,
-          name: 'أ.د. خالد محمد علي',
-          title: 'وكيل الكلية للدراسات العليا والبحوث',
-          email: 'khaled.mohamed@med.luxor.edu.eg',
-          phone: '+20 95 123 4501',
-          office: 'مكتب الوكيل - الدور الثالث',
-          specialization: 'الجراحة العامة'
-        },
-        {
-          id: 3,
-          name: 'أ.د. فاطمة حسن إبراهيم',
-          title: 'وكيل الكلية لشؤون خدمة المجتمع وتنمية البيئة',
-          email: 'fatma.hassan@med.luxor.edu.eg',
-          phone: '+20 95 123 4502',
-          office: 'مكتب الوكيل - الدور الأول',
-          specialization: 'طب المجتمع'
-        },
-        {
-          id: 4,
-          name: 'د. أحمد سعد الدين',
-          title: 'مدير إدارة شؤون الطلاب',
-          email: 'ahmed.saad@med.luxor.edu.eg',
-          phone: '+20 95 123 4503',
-          office: 'إدارة شؤون الطلاب',
-          specialization: 'الإدارة التعليمية'
-        }
-      ]
-    },
-    {
-      id: 'history',
-      name: 'تاريخ الكلية',
-      description: 'مسيرة كلية الطب بجامعة الأقصر منذ تأسيسها وحتى اليوم',
-      establishedDate: '2006-09-15',
-      generalOverview: 'تأسست كلية الطب بجامعة الأقصر في عام 2006 كجزء من خطة جامعة الأقصر لتطوير التعليم العالي في صعيد مصر. بدأت الكلية بأعداد محدودة من الطلاب والأقسام الأكاديمية، وتطورت تدريجياً لتصبح واحدة من الكليات الرائدة في مجال التعليم الطبي. شهدت الكلية العديد من الإنجازات والتطورات على مدار السنوات الماضية، من توسع في البرامج الأكاديمية وتطوير البنية التحتية إلى تحقيق الاعتماد الأكاديمي وإجراء بحوث علمية متميزة.'
-    },
-    {
-      id: 'administration',
-      name: 'اهداف الكلية',
-      description: 'الأهداف الاستراتيجية لكلية الطب بجامعة الأقصر',
-      establishedDate: '2006-09-15',
-      objectives: [
-        'تقديم تعليم طبي متميز يواكب أحدث التطورات العلمية والتكنولوجية',
-        'إعداد أطباء مؤهلين ومتخصصين قادرين على تقديم رعاية صحية عالية الجودة',
-        'تطوير البحث العلمي والابتكار في مجال الطب والعلوم الصحية',
-        'تقديم خدمات صحية متميزة للمجتمع المحلي والإقليمي',
-        'بناء شراكات استراتيجية مع المؤسسات الطبية والأكاديمية المحلية والدولية',
-        'تطوير قدرات أعضاء هيئة التدريس والباحثين',
-        'تحسين البنية التحتية والمرافق التعليمية والبحثية',
-        'تعزيز دور الكلية في خدمة المجتمع والتنمية المستدامة'
-      ]
-    },
-    {
-      id: 'structure',
-      name: 'الهيكل التنظيمي',
-      description: 'الهيكل الإداري والتنظيمي لكلية الطب بجامعة الأقصر',
-      establishedDate: '2006-09-15',
-      generalOverview: 'يضم الهيكل التنظيمي لكلية الطب عدة إدارات وأقسام أكاديمية تعمل بتنسيق تام لتحقيق الأهداف التعليمية والبحثية والخدمية للكلية. يتكون الهيكل من عميد الكلية ووكلاء الكلية في المجالات المختلفة، بالإضافة إلى الأقسام الأكاديمية والإدارات المساندة التي تضمن سير العملية التعليمية بكفاءة عالية.',
-      head: 'أ.د. محمد عبد الرحمن الطيب - عميد الكلية',
-      members: [
-        {
-          id: 1,
-          name: 'أ.د. سامية أحمد محمود',
-          title: 'وكيل الكلية لشؤون التعليم والطلاب',
-          email: 'samia.ahmed@med.luxor.edu.eg',
-          phone: '+20 95 123 4500',
-          office: 'مكتب الوكيل - الدور الثاني',
-          specialization: 'طب الأطفال'
-        },
-        {
-          id: 2,
-          name: 'أ.د. خالد محمد علي',
-          title: 'وكيل الكلية للدراسات العليا والبحوث',
-          email: 'khaled.mohamed@med.luxor.edu.eg',
-          phone: '+20 95 123 4501',
-          office: 'مكتب الوكيل - الدور الثالث',
-          specialization: 'الجراحة العامة'
-        },
-        {
-          id: 3,
-          name: 'أ.د. فاطمة حسن إبراهيم',
-          title: 'وكيل الكلية لشؤون خدمة المجتمع وتنمية البيئة',
-          email: 'fatma.hassan@med.luxor.edu.eg',
-          phone: '+20 95 123 4502',
-          office: 'مكتب الوكيل - الدور الأول',
-          specialization: 'طب المجتمع'
-        }
-      ]
-    }
-  ];
+  private apiUrl = environment.apiUrl;
 
-  private departments: AboutDepartment[] = [
-    {
-      id: 1,
-      name: 'قسم التشريح وعلم الأجنة',
-      description: 'قسم متخصص في تدريس علوم التشريح وعلم الأجنة للطلاب الجامعيين والدراسات العليا',
-      head: 'أ.د. محمد أحمد الشريف',
-      establishedDate: '2006-09-15',
-      location: 'مبنى العلوم الأساسية - الدور الثاني',
-      contactInfo: {
-        phone: '+20 95 123 4510',
-        email: 'anatomy@med.luxor.edu.eg',
-        office: 'غرفة 201'
-      }
-    },
-    {
-      id: 2,
-      name: 'قسم وظائف الأعضاء',
-      description: 'قسم متخصص في تدريس علم وظائف الأعضاء والفسيولوجيا الطبية',
-      head: 'أ.د. سارة محمود فتحي',
-      establishedDate: '2006-09-15',
-      location: 'مبنى العلوم الأساسية - الدور الثالث',
-      contactInfo: {
-        phone: '+20 95 123 4511',
-        email: 'physiology@med.luxor.edu.eg',
-        office: 'غرفة 301'
-      }
-    },
-    {
-      id: 3,
-      name: 'قسم الباثولوجيا الإكلينيكية',
-      description: 'قسم متخصص في علم الأمراض والتشخيص المخبري',
-      head: 'أ.د. عمرو حسام الدين',
-      establishedDate: '2007-02-10',
-      location: 'مبنى المختبرات الطبية',
-      contactInfo: {
-        phone: '+20 95 123 4512',
-        email: 'pathology@med.luxor.edu.eg',
-        office: 'مختبر الباثولوجيا'
-      }
-    },
-    {
-      id: 4,
-      name: 'قسم الطب الباطني',
-      description: 'قسم متخصص في تشخيص وعلاج الأمراض الباطنية',
-      head: 'أ.د. نادية عبد الحميد',
-      establishedDate: '2008-01-15',
-      location: 'مستشفى الأقصر الجامعي',
-      contactInfo: {
-        phone: '+20 95 123 4513',
-        email: 'internal.medicine@med.luxor.edu.eg',
-        office: 'قسم الباطنة'
-      }
-    }
-  ];
+  constructor(private http: HttpClient) {}
 
-  private services: AboutServiceModel[] = [
-    {
-      id: 1,
-      name: 'خدمات التعليم الطبي',
-      description: 'برامج تعليمية متطورة في مختلف التخصصات الطبية',
-      category: 'تعليم',
-      isActive: true,
-      requirements: ['شهادة الثانوية العامة', 'اجتياز اختبارات القبول'],
-      procedures: ['التقديم الإلكتروني', 'اختبارات القبول', 'المقابلة الشخصية'],
-      duration: '6 سنوات',
-      cost: 'حسب اللوائح الجامعية'
-    },
-    {
-      id: 2,
-      name: 'خدمات البحث العلمي',
-      description: 'دعم وتطوير البحوث العلمية في المجالات الطبية',
-      category: 'بحث علمي',
-      isActive: true,
-      requirements: ['مشروع بحثي معتمد', 'إشراف أكاديمي'],
-      procedures: ['تقديم المقترح البحثي', 'الموافقة الأخلاقية', 'تنفيذ البحث'],
-      duration: 'متغيرة حسب نوع البحث',
-      cost: 'حسب نوع البحث'
-    },
-    {
-      id: 3,
-      name: 'الخدمات الطبية المتخصصة',
-      description: 'خدمات طبية متخصصة للمجتمع المحلي',
-      category: 'خدمات طبية',
-      isActive: true,
-      requirements: ['حجز موعد مسبق'],
-      procedures: ['الحجز', 'الفحص الطبي', 'التشخيص والعلاج'],
-      duration: 'حسب نوع الخدمة',
-      cost: 'رمزية'
-    }
-  ];
-
-  private news: AboutNews[] = [
-    {
-      id: 1,
-      title: 'احتفالية تخريج الدفعة الخامسة عشرة من كلية الطب',
-      content: 'احتفلت كلية الطب بجامعة الأقصر بتخريج الدفعة الخامسة عشرة من طلاب الكلية...',
-      excerpt: 'احتفالية مميزة لتخريج دفعة جديدة من الأطباء المؤهلين',
-      publishDate: '2024-01-30',
-      lastModified: '2024-01-30',
-      author: 'أ.د. محمد عبد الرحمن الطيب',
-      category: NewsCategory.NEWS,
-      imageUrl: 'https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg',
-      isPublished: true,
-      views: 450
-    },
-    {
-      id: 2,
-      title: 'مؤتمر الطب الحديث والتكنولوجيا الطبية',
-      content: 'تنظم كلية الطب مؤتمر دولي حول أحدث التطورات في الطب والتكنولوجيا...',
-      excerpt: 'مؤتمر دولي يجمع خبراء الطب من مختلف أنحاء العالم',
-      publishDate: '2024-01-28',
-      lastModified: '2024-01-28',
-      author: 'أ.د. خالد محمد علي',
-      category: NewsCategory.CONFERENCES,
-      imageUrl: 'https://images.pexels.com/photos/5452268/pexels-photo-5452268.jpeg',
-      isPublished: true,
-      views: 320
-    },
-    {
-      id: 3,
-      title: 'حملة توعية صحية في قرى الأقصر',
-      content: 'نظمت كلية الطب حملة توعية صحية شاملة في قرى محافظة الأقصر...',
-      excerpt: 'مبادرة مجتمعية لنشر الوعي الصحي في المناطق الريفية',
-      publishDate: '2024-01-25',
-      lastModified: '2024-01-25',
-      author: 'أ.د. فاطمة حسن إبراهيم',
-      category: NewsCategory.EVENTS,
-      imageUrl: 'https://images.pexels.com/photos/4033148/pexels-photo-4033148.jpeg',
-      isPublished: true,
-      views: 280
-    }
-  ];
-
-  getAll(): Observable<About[]> {
-    return of(this.aboutData);
+  // جلب بيانات "عن الكلية"
+  getAboutUniversity(): Observable<AboutUniversity[]> {
+    return this.http.get<{data: AboutUniversity[]}>(`${this.apiUrl}about/getall`).pipe(
+      map(response => response.data)
+    );
   }
 
-  getById(id: string): Observable<About | undefined> {
-    const about = this.aboutData.find(a => a.id === id);
-    return of(about);
+  // جلب عضو هيئة تدريس واحد بالـ id
+  getMemberById(id: string): Observable<Member | undefined> {
+    return this.getAllMembers().pipe(
+      map(members => members.find(m => m.id === id))
+    );
   }
 
-  getDepartmentsByAboutId(aboutId: string): Observable<AboutDepartment[]> {
-    return of(this.departments);
+  // جلب كل أعضاء هيئة التدريس
+  getAllMembers(): Observable<Member[]> {
+    return this.http.get<{data: Member[]}>(`${this.apiUrl}member/getall`).pipe(
+      map(response => response.data)
+    );
   }
 
-  getServicesByAboutId(aboutId: string): Observable<AboutServiceModel[]> {
-    return of(this.services);
+  // جلب أعضاء حسب نوعهم (عميد، قطاع، قسم …)
+  getMembersByType(type: string): Observable<Member[]> {
+    return this.getAllMembers().pipe(
+      map(members => members.filter(m => m.memberType === type))
+    );
   }
 
-  getNewsByAboutId(aboutId: string): Observable<AboutNews[]> {
-    return of(this.news);
+  // جلب عميد الكلية
+  getPresident(): Observable<Member | undefined> {
+    return this.getAllMembers().pipe(
+      map(members => members.find(m => m.isPresident))
+    );
   }
 }

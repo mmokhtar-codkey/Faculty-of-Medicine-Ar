@@ -48,3 +48,44 @@
   margin: 0;
   opacity: 0.8;
 }
+
+
+ .app-container {
+      min-height: 100vh;
+      background: linear-gradient(135deg, 
+        var(--medicine-light-beige) 0%, 
+        var(--medicine-white) 50%, 
+        var(--medicine-light-gray) 100%);
+    }
+
+    .main-content {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-section {
+      background: var(--medicine-white);
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(183, 28, 28, 0.1);
+      padding: 3rem 2rem;
+    }
+
+    .btn-medicine,
+    .btn-medicine-orange {
+      margin: 0 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 2rem 1rem;
+      }
+      
+      .btn-medicine,
+      .btn-medicine-orange {
+        display: block;
+        width: 100%;
+        margin: 0.5rem 0;
+      }
+    }

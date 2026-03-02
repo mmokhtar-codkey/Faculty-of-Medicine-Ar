@@ -1,40 +1,32 @@
-  <div class="dean-message-container">
-      <div class="section-title">
-        <h2>{{ sectionTitle }}</h2>
+<div class="dean-message-container" *ngIf="deanSpeech">
+  <div class="section-title">
+    <h2>{{ sectionTitle }}</h2>
+  </div>
+
+  <div class="content-wrapper">
+    <div class="dean-info-card">
+      <div class="dean-image-section">
+        <div class="image-container">
+          <img *ngIf="deanSpeech.deanSpeechAttachments && deanSpeech.deanSpeechAttachments[0]?.url"
+               [src]="deanSpeech.deanSpeechAttachments[0].url"
+               [alt]="deanSpeech.memberName"
+               class="dean-photo">
+          <div class="image-overlay"></div>
+        </div>
       </div>
-
-      <div class="content-wrapper">
-        <div class="dean-info-card">
-          <div class="dean-image-section">
-            <div class="image-container">
-              <img [src]="deanInfo.image" [alt]="deanInfo.name" class="dean-photo">
-              <div class="image-overlay"></div>
-            </div>
-          </div>
-          
-          <div class="dean-details">
-            <h3 class="dean-name">{{ deanInfo.name }}</h3>
-            <p class="dean-title">{{ deanInfo.title }}</p>
-            
-            <div class="qualifications">
-              <h4>المؤهلات الأكاديمية:</h4>
-              <ul class="qualifications-list">
-                <li *ngFor="let qualification of deanInfo.qualifications">
-                  <i class="fas fa-graduation-cap"></i>
-                  {{ qualification }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="message-section">
-          <div class="message-content">
-            <div class="quote-icon">
-              <i class="fas fa-quote-right"></i>
-            </div>
-            <div class="message-text" [innerHTML]="displayedMessage"></div>
-          </div>
-        </div>
+      
+      <div class="dean-details">
+        <h3 class="dean-name">{{ deanSpeech.memberName }}</h3>
+        <p class="dean-title">{{ deanSpeech.memberPosition }}</p>
       </div>
     </div>
+
+    <div class="message-section">
+      <div class="message-content">
+        
+     <div class="message-text quill-content description"
+             [innerHTML]="deanSpeech?.speech | cleanHtml">
+        </div>  
+    </div>
+  </div>
+</div>

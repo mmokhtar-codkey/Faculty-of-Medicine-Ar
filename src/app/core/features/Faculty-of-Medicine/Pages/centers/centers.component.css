@@ -18,12 +18,14 @@ h1{
 
 .list-group-item:hover {
   background-color: var(--medicine-light-gray);
-  color: var(--medicine-primary-red);
+  color: var(--white);
+
 }
 
 .list-group-item.active {
   background-color: var(--medicine-primary-red);
   border-color: var(--medicine-primary-red);
+  color: white;
 }
 
 .card {

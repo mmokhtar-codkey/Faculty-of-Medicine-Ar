@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ServiceDetail, ServiceDepartment, RelatedService, ServiceNews } from '../../model/service.model';
-import { ServiceDetailsService } from '../../Services/service-details.service';
+import { ServiceDetail } from '../../model/service.model';
+import { ServiceService } from '../../Services/service.service';
 
 @Component({
   selector: 'app-services',
@@ -13,72 +13,108 @@ import { ServiceDetailsService } from '../../Services/service-details.service';
 })
 export class ServicesComponent implements OnInit {
   service?: ServiceDetail;
-  departments: ServiceDepartment[] = [];
-  relatedServices: RelatedService[] = [];
-  serviceNews: ServiceNews[] = [];
-  
-  activeTab = 'about';
-  activeAboutSection = 'overview';
-  selectedDepartment?: ServiceDepartment;
-  selectedRelatedService?: RelatedService;
+  services: ServiceDetail[] = [];
+  isListView: boolean = false;
+  activeTab: string = 'departments';
+  activeAboutSection: string = 'overview';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private serviceDetailsService: ServiceDetailsService
+    private serviceService: ServiceService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const serviceId = params['id'];
-      if (serviceId) {
-        this.loadServiceData(serviceId);
+      const slug = params['slug']; // نقرأ الـ slug بدل الـ id
+      if (slug) {
+        this.isListView = false;
+        this.loadServiceData(slug);
+      } else {
+        this.isListView = true;
+        this.loadServices();
       }
     });
   }
 
-  private loadServiceData(serviceId: string): void {
-    // Load service details
-    this.serviceDetailsService.getById(serviceId).subscribe((service: ServiceDetail | undefined) => {
-      this.service = service;
-    });
-
-    // Load departments
-    this.serviceDetailsService.getDepartmentsByServiceId(serviceId).subscribe((departments: ServiceDepartment[]) => {
-      this.departments = departments;
-      if (this.departments.length > 0) {
-        this.selectedDepartment = this.departments[0];
+  private loadServiceData(slug: string): void {
+    this.serviceService.getBySlug(slug).subscribe({
+      next: (serviceDetail) => {
+        this.service = serviceDetail;
+      },
+      error: (error) => {
+        console.error('Error loading service:', error);
+        this.service = undefined;
       }
     });
+  }
 
-    // Load related services
-    this.serviceDetailsService.getRelatedServicesByServiceId(serviceId).subscribe((services: RelatedService[]) => {
-      this.relatedServices = services;
-      if (this.relatedServices.length > 0) {
-        this.selectedRelatedService = this.relatedServices[0];
+  private loadServices(): void {
+    this.serviceService.getAll().subscribe({
+      next: (services) => {
+        this.services = services.filter(s => s.isActive);
+      },
+      error: (error) => {
+        console.error('Error loading services:', error);
+        this.services = [];
       }
     });
-
-   
   }
 
-  switchTab(tabName: string): void {
-    this.activeTab = tabName;
+  switchTab(tab: string): void {
+    this.activeTab = tab;
   }
 
-  switchAboutSection(sectionName: string): void {
-    this.activeAboutSection = sectionName;
+  trackByFn(index: number, item: ServiceDetail): any {
+    return item.id;
   }
 
-  selectDepartment(department: ServiceDepartment): void {
-    this.selectedDepartment = department;
+  onServiceClick(service: ServiceDetail): void {
+    if (service && service.title) {
+      this.router.navigate(['/services', service.title]); // نوجّه بالـ slug
+    }
+  }
+  
+  formatDescription(description: string): string {
+  if (!description) return '';
+
+  // لو فيه جدول العيادات الخارجية
+  if (description.includes('جدول العيادات الخارجية')) {
+    const parts = description.split('جدول العيادات الخارجية');
+    const tableText = parts[1].trim();
+    const lines = tableText.split('\n').filter(line => line.trim() !== '');
+    const headers = lines[0].split('\t');
+    const rows = lines.slice(1).map(line => line.split('\t'));
+
+    let tableHtml = '<table class="table table-bordered table-striped">';
+    tableHtml += '<thead><tr>';
+    headers.forEach(h => tableHtml += `<th>${h}</th>`);
+    tableHtml += '</tr></thead><tbody>';
+    rows.forEach(row => {
+      tableHtml += '<tr>';
+      row.forEach(cell => tableHtml += `<td>${cell}</td>`);
+      tableHtml += '</tr>';
+    });
+    tableHtml += '</tbody></table>';
+
+    return parts[0] + '<br><br><strong>جدول العيادات الخارجية</strong><br>' + tableHtml;
   }
 
-  selectRelatedService(service: RelatedService): void {
-    this.selectedRelatedService = service;
+  // لو فيه كلمة "التحاليل الطبية المتوفرة" أو "الأشعات التشخيصية المتوفرة"
+  if (description.includes('التحاليل الطبية المتوفرة') || description.includes('الأشعات التشخيصية المتوفرة')) {
+    const lines = description.split('\n').filter(line => line.trim() !== '');
+    let listHtml = '<ul class="styled-list">';
+    lines.forEach(line => {
+      if (!line.includes('المتوفرة') && !line.includes('خدمات')) {
+        listHtml += `<li>${line}</li>`;
+      }
+    });
+    listHtml += '</ul>';
+    return description.split('\n')[0] + '<br><br>' + listHtml;
   }
 
-  goToNewsDetails(newsId: number): void {
-    this.router.navigate(['/news', newsId]);
-  }
+  return description;
+}
+
+
 }

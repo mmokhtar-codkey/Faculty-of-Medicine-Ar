@@ -92,6 +92,7 @@
   box-shadow: var(--services-card-shadow);
   text-align: center;
   padding: 0; /* Remove padding to let header take full width */
+  cursor: pointer;
 }
 
 .service-card:hover {

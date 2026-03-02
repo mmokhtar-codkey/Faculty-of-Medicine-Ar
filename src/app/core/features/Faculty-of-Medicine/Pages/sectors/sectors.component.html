@@ -1,62 +1,45 @@
 <div class="container section">
   <!-- Sector Title Section -->
-  <div class="sector-header bg-primary text-white p-4 mb-4 rounded">
-    <h1 class="mb-0">{{ sector?.name || 'جاري تحميل البيانات...' }}</h1>
+  <div class="sector-header  text-white p-4 mb-4 rounded">
+    <h1 class="text-brown">{{ sector?.name || 'جاري تحميل البيانات...' }}</h1>
   </div>
 
   <!-- Horizontal Tabs -->
   <div class="medicine-tabs">
     <ul class="nav nav-tabs">
       <li class="nav-item">
-        <button 
-          class="nav-link" 
-          [class.active]="activeTab === 'about'"
-          (click)="switchTab('about')"
-          type="button"
-        >
+        <button class="nav-link" [class.active]="activeTab === 'about'" (click)="switchTab('about')" type="button">
           عن القطاع
         </button>
       </li>
       <li class="nav-item">
-        <button 
-          class="nav-link" 
-          [class.active]="activeTab === 'departments'"
-          (click)="switchTab('departments')"
-          type="button"
-        >
-          أقسام القطاع
+        <button class="nav-link" [class.active]="activeTab === 'details'" (click)="switchTab('details')" type="button">
+          تفاصيل القطاع
         </button>
       </li>
       <li class="nav-item">
-        <button 
-          class="nav-link" 
-          [class.active]="activeTab === 'services'"
-          (click)="switchTab('services')"
-          type="button"
-        >
+        <button class="nav-link" [class.active]="activeTab === 'programs'" (click)="switchTab('programs')" type="button">
+          برامج القطاع
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab === 'services'" (click)="switchTab('services')" type="button">
           خدمات القطاع
         </button>
       </li>
       <li class="nav-item">
-        <button
-          class="nav-link"
-          [class.active]="activeTab === 'news'"
-          (click)="switchTab('news')"
-          type="button"
-        >
-          أخبار القطاع
+        <button class="nav-link" [class.active]="activeTab === 'posts'" (click)="switchTab('posts')" type="button">
+          منشورات القطاع
         </button>
       </li>
       <li class="nav-item">
-        <button
-          class="nav-link"
-          [class.active]="activeTab === 'members'"
-          (click)="switchTab('members')"
-          type="button"
-        >
+        <button class="nav-link" [class.active]="activeTab === 'members'" (click)="switchTab('members')" type="button">
           أعضاء القطاع
         </button>
       </li>
+      <li class="nav-item"> 
+        <button class="nav-link" [class.active]="activeTab === 'units'" (click)="switchTab('units')" type="button">
+           وحدات القطاع </button> </li>
     </ul>
   </div>
 
@@ -68,36 +51,20 @@
         <!-- Sidebar -->
         <div class="col-md-3 mb-4">
           <div class="list-group">
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'overview'"
-              (click)="switchAboutSection('overview')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'overview'" (click)="switchAboutSection('overview')">
               نظرة عامة
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'vision'"
-              (click)="switchAboutSection('vision')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'vision'" (click)="switchAboutSection('vision')">
               الرؤية
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'mission'"
-              (click)="switchAboutSection('mission')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'mission'" (click)="switchAboutSection('mission')">
               الرسالة
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'objectives'"
-              (click)="switchAboutSection('objectives')"
-            >
+            <button type="button" class="list-group-item list-group-item-action"
+              [class.active]="activeAboutSection === 'objectives'" (click)="switchAboutSection('objectives')">
               الأهداف
             </button>
           </div>
@@ -109,23 +76,25 @@
             <div class="card-body">
               <div *ngIf="activeAboutSection === 'overview'">
                 <h3 class="text-brown mb-3">نظرة عامة</h3>
-                <p>{{ sector?.generalOverview }}</p>
+  <div *ngIf="sector?.about" class="quill-content description" [innerHTML]="sector?.about | cleanHtml">
+                </div>
+                                <p *ngIf="!sector?.about">لا توجد معلومات متاحة عن القطاع.</p>
               </div>
 
               <div *ngIf="activeAboutSection === 'vision'">
                 <h3 class="text-brown mb-3">الرؤية</h3>
-                <p>{{ sector?.vision }}</p>
+                <div class="quill-content description" [innerHTML]="sector?.vision | cleanHtml"></div>
               </div>
 
               <div *ngIf="activeAboutSection === 'mission'">
                 <h3 class="text-brown mb-3">الرسالة</h3>
-                <p>{{ sector?.mission }}</p>
+                <div class="quill-content description" [innerHTML]="sector?.mission | cleanHtml"></div>
               </div>
 
               <div *ngIf="activeAboutSection === 'objectives'">
                 <h3 class="text-brown mb-3">الأهداف</h3>
                 <ul>
-                  <li *ngFor="let objective of sector?.objectives">{{ objective }}</li>
+                  <li *ngFor="let goal of sector?.goals">{{ goal.goalName }}</li>
                 </ul>
               </div>
             </div>
@@ -134,58 +103,42 @@
       </div>
     </div>
 
-    <!-- Departments Tab Content -->
-    <div *ngIf="activeTab === 'departments'" class="col-12">
+    <!-- Details Tab Content -->
+    <div *ngIf="activeTab === 'details'" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="text-brown mb-3">{{ sectorDetail?.title }}</h3>
+          <div class="quill-content description mb-3" [innerHTML]="sectorDetail?.content | cleanHtml"></div>
+          <p *ngIf="!sectorDetail?.content">لا توجد تفاصيل متاحة عن القطاع.</p>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Programs Tab Content -->
+    <div *ngIf="activeTab === 'programs'" class="col-12">
       <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 mb-4">
+        <div class="col-md-3 mb-4" *ngIf="sectorPrograms && sectorPrograms.length > 0">
           <div class="list-group">
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              *ngFor="let department of departments"
-              [class.active]="selectedDepartment?.id === department.id"
-              (click)="selectDepartment(department)"
-            >
-              {{ department.name }}
+            <button type="button" class="list-group-item list-group-item-action"
+              *ngFor="let program of sectorPrograms"
+              [class.active]="selectedProgram?.id === program.id"
+              (click)="selectProgram(program)">
+              {{ program.name }}
             </button>
           </div>
         </div>
-
-        <!-- Content -->
         <div class="col-md-9">
-          <div class="card" *ngIf="selectedDepartment">
+          <div class="card" *ngIf="selectedProgram">
             <div class="card-body">
-              <h3 class="text-brown mb-3">{{ selectedDepartment.name }}</h3>
-              <p class="mb-3">{{ selectedDepartment.description }}</p>
-              
-              <div class="row">
-                <div class="col-md-6">
-                  <h5 class="text-primary">معلومات القسم</h5>
-                  <ul class="list-unstyled">
-                    <li><strong>رئيس القسم:</strong> {{ selectedDepartment.head }}</li>
-                    <li><strong>تاريخ التأسيس:</strong> {{ selectedDepartment.establishedDate | date: 'yyyy/MM/dd' }}</li>
-                    <li><strong>الموقع:</strong> {{ selectedDepartment.location }}</li>
-                  </ul>
-                </div>
-                
-                <div class="col-md-6">
-                  <h5 class="text-primary">معلومات الاتصال</h5>
-                  <ul class="list-unstyled">
-                    <li *ngIf="selectedDepartment.contactInfo.phone">
-                      <strong>الهاتف:</strong> {{ selectedDepartment.contactInfo.phone }}
-                    </li>
-                    <li *ngIf="selectedDepartment.contactInfo.email">
-                      <strong>البريد الإلكتروني:</strong> {{ selectedDepartment.contactInfo.email }}
-                    </li>
-                    <li *ngIf="selectedDepartment.contactInfo.office">
-                      <strong>المكتب:</strong> {{ selectedDepartment.contactInfo.office }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
+              <h3 class="text-brown mb-3">{{ selectedProgram.name }}</h3>
+              <p><strong>اسم البرنامج:</strong> {{ selectedProgram.programName }}</p>
+              <p><strong>القطاع:</strong> {{ selectedProgram.sectorName }}</p>
+              <a (click)="goToProgramDetails(selectedProgram)" class="btn btn-medicine">عرض البرنامج</a>
             </div>
           </div>
+          <p *ngIf="!selectedProgram && sectorPrograms && sectorPrograms.length > 0">لا توجد تفاصيل متاحة عن البرنامج.</p>
+          <p *ngIf="!sectorPrograms || sectorPrograms.length === 0">لا توجد برامج متاحة في هذا القطاع.</p>
         </div>
       </div>
     </div>
@@ -193,76 +146,57 @@
     <!-- Services Tab Content -->
     <div *ngIf="activeTab === 'services'" class="col-12">
       <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 mb-4">
+        <div class="col-md-3 mb-4" *ngIf="sectorServices && sectorServices.length > 0">
           <div class="list-group">
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              *ngFor="let service of services"
+            <button type="button" class="list-group-item list-group-item-action"
+              *ngFor="let service of sectorServices"
               [class.active]="selectedService?.id === service.id"
-              (click)="selectService(service)"
-            >
+              (click)="selectService(service)">
               {{ service.name }}
             </button>
           </div>
         </div>
-
-        <!-- Content -->
         <div class="col-md-9">
           <div class="card" *ngIf="selectedService">
             <div class="card-body">
               <h3 class="text-brown mb-3">{{ selectedService.name }}</h3>
-              <p class="mb-3">{{ selectedService.description }}</p>
-              
-              <div class="row">
-                <div class="col-md-6">
-                  <h5 class="text-primary">تفاصيل الخدمة</h5>
-                  <ul class="list-unstyled">
-                    <li><strong>التصنيف:</strong> {{ selectedService.category }}</li>
-                    <li *ngIf="selectedService.duration">
-                      <strong>المدة المقدرة:</strong> {{ selectedService.duration }}
-                    </li>
-                    <li *ngIf="selectedService.cost">
-                      <strong>التكلفة:</strong> {{ selectedService.cost }}
-                    </li>
-                    <li>
-                      <strong>الحالة:</strong> 
-                      <span [class]="selectedService.isActive ? 'text-success' : 'text-danger'">
-                        {{ selectedService.isActive ? 'متاحة' : 'غير متاحة' }}
-                      </span>
-                    </li>
-                  </ul>
-                </div>
+              <p class="mb-3">{{ selectedService.details }}</p>
+              <ul class="list-unstyled">
+                <li><strong>المدة:</strong> {{ selectedService.duration }}</li>
+                <li><strong>الفئة:</strong> {{ selectedService.category }}</li>
+                <li><strong>الرسوم:</strong> {{ selectedService.fees }}</li>
+                <li><strong>جهة الاتصال:</strong> {{ selectedService.contactPerson }}</li>
+                <li><strong>الهاتف:</strong> {{ selectedService.contactPhone }}</li>
+              </ul>
+            </div>
+          </div>
+          <p *ngIf="!selectedService && sectorServices && sectorServices.length > 0">لا توجد تفاصيل متاحة عن الخدمة.</p>
+          <p *ngIf="!sectorServices || sectorServices.length === 0">لا توجد خدمات متاحة في هذا القطاع.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Posts Tab Content -->
+    <div *ngIf="activeTab === 'posts'" class="col-12">
+      <h3 class="text-brown mb-3">منشورات القطاع</h3>
+      <div class="row" *ngIf="sectorPosts && sectorPosts.length > 0">
+        <div class="col-lg-4 col-md-6 mb-4" *ngFor="let post of sectorPosts">
+          <div class="news-card">
+            <div class="news-card-body">
+              <img *ngIf="post.postAttachments?.length"
+                   [src]="post.postAttachments[0].url"
+                   alt="{{ post.title }}"
+                   class="news-card-image mb-3"
+                   style="width:100%; height: 300px;">
+              <h5 class="news-card-title">{{ post.title }}</h5>
+              <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-medicine btn-sm"  (click)="goToPostDetails(post)">اقرأ المزيد</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- News Tab Content -->
-    <div *ngIf="activeTab === 'news'" class="col-12">
-      <div class="row">
-        <div class="col-md-4 mb-4" *ngFor="let newsItem of sectorNews">
-          <div class="news-card">
-            <div class="news-card-image" *ngIf="newsItem.imageUrl">
-              <img [src]="newsItem.imageUrl" [alt]="newsItem.title" class="img-fluid">
-            </div>
-            <div class="news-card-body">
-              <div class="news-card-date">{{ newsItem.publishDate | date: 'yyyy/MM/dd' }}</div>
-              <h5 class="news-card-title">{{ newsItem.title }}</h5>
-              <p class="news-card-excerpt">{{ newsItem.excerpt }}</p>
-              <button
-                class="btn btn-medicine btn-sm"
-                (click)="goToNewsDetails(newsItem.id)"
-              >
-                اقرأ المزيد
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <p *ngIf="!sectorPosts || sectorPosts.length === 0">لا توجد منشورات متاحة في هذا القطاع.</p>
     </div>
 
     <!-- Members Tab Content -->
@@ -270,32 +204,49 @@
       <div class="card">
         <div class="card-body">
           <h3 class="text-brown mb-3">أعضاء القطاع</h3>
-
-          <div *ngIf="sector?.head" class="mb-4">
-            <h5 class="text-primary">رئيس القطاع</h5>
-            <p>{{ sector?.head }}</p>
-          </div>
-
-          <div *ngIf="sector && sector.members && sector.members.length > 0">
-            <h5 class="text-primary">أعضاء القطاع</h5>
+          <div *ngIf="sectorMembers && sectorMembers.length > 0">
             <div class="row">
-              <div class="col-md-6 mb-3" *ngFor="let member of sector.members!">
+              <div class="col-md-6 mb-3" *ngFor="let member of sectorMembers">
                 <div class="card">
                   <div class="card-body">
-                    <h6 class="card-title">{{ member.name }}</h6>
-                    <p class="card-text">{{ member.title }}</p>
-                    <p class="card-text"><strong>التخصص:</strong> {{ member.specialization }}</p>
-                    <p class="card-text" *ngIf="member.email"><strong>البريد الإلكتروني:</strong> {{ member.email }}</p>
-                    <p class="card-text" *ngIf="member.phone"><strong>الهاتف:</strong> {{ member.phone }}</p>
-                    <p class="card-text" *ngIf="member.office"><strong>المكتب:</strong> {{ member.office }}</p>
+                    <h6 class="card-title">{{ member.memberName }}</h6>
+                    <p><span *ngIf="member.isLeader">(رئيس القطاع)</span></p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-          <div *ngIf="sector && !sector.head && (!sector.members || sector.members.length === 0)">
+          <div *ngIf="!sectorMembers || sectorMembers.length === 0">
             <p>لا توجد معلومات متاحة عن أعضاء القطاع.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    <div *ngIf="activeTab === 'units'" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="text-brown mb-3">الوحدات التابعة للقطاع</h3>
+          <div *ngIf="sectorUnits && sectorUnits.length > 0">
+            <div class="row">
+              <div class="col-md-6 mb-3" *ngFor="let unit of sectorUnits">
+                <div class="card">
+                  <div class="card-body">
+                    <h6 class="card-title">{{ unit.unitName }}</h6>
+                    <p><strong>المكان:</strong> {{ unit.location }}</p>
+                    <p><strong>المسؤول:</strong> {{ unit.memberName }}</p>
+                    <p><strong>البريد الإلكتروني:</strong> {{ unit.email }}</p>
+                    <p><strong>الهاتف:</strong> {{ unit.unitPhone }}</p>
+                           <button class="btn btn-medicine btn-sm"  (click)="goTounitDetails(unit)">اقرأ المزيد</button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!sectorUnits || sectorUnits.length === 0">
+            <p>لا توجد معلومات متاحة عن وحدات القطاع.</p>
           </div>
         </div>
       </div>

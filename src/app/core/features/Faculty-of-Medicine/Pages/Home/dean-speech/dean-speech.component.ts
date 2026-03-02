@@ -1,40 +1,45 @@
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, ViewEncapsulation, OnInit } from '@angular/core';
-import { DeanService } from '../../../Services/dean.service';
-import { DeanInfo } from '../../../model/dean-info.model';
+import { DeanSpeechService } from '../../../Services/dean.service';
+import { DeanSpeech } from '../../../model/dean-info.model';
+import { CleanHtmlPipe } from '../../../../../pipes/clean-html.pipe'; // ✅ استدعاء الـ Pipe
+
 
 @Component({
   selector: 'app-dean-speech',
   standalone: true,
-  imports: [CommonModule],
-  encapsulation: ViewEncapsulation.None,
- templateUrl: './dean-speech.component.html',
+  imports: [CommonModule, CleanHtmlPipe],
+  templateUrl: './dean-speech.component.html',
   styleUrls: ['./dean-speech.component.css']
 })
 export class DeanSpeechComponent implements OnInit {
   sectionTitle: string = `كلمة العميد`;
-  @Input() fullText: string = '';
-  @Input() showFull: boolean = true;
+  deanSpeech: DeanSpeech | null = null;
+  showFull: boolean = true;
 
-  deanInfo: DeanInfo = {} as DeanInfo;
-
-  constructor(private deanService: DeanService) {}
+  constructor(private deanSpeechService: DeanSpeechService) {}
 
   ngOnInit(): void {
-    this.loadDeanInfo();
+    this.loadDeanSpeech();
   }
 
-  private loadDeanInfo(): void {
-    this.deanService.getDeanInfo().subscribe(info => {
-      this.deanInfo = info;
+  private loadDeanSpeech(): void {
+    this.deanSpeechService.getAll().subscribe({
+      next: (res) => {
+        if (res && res.length > 0) {
+          this.deanSpeech = res[0]; // أول كلمة عميد
+        }
+      },
+      error: (err) => {
+        console.error('Error loading dean speech:', err);
+      }
     });
   }
 
   get displayedMessage(): string {
-    if (this.showFull) {
-      return this.deanInfo.message;
-    } else {
-      return this.deanInfo.message?.slice(0, 810) + '...';
-    }
+    if (!this.deanSpeech) return '';
+    return this.showFull
+      ? this.deanSpeech.speech
+      : this.deanSpeech.speech.slice(0, 810) + '...';
   }
 }

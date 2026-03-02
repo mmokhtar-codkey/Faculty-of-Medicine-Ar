@@ -1,77 +1,44 @@
-export interface About {
+// أهداف الكلية
+export interface AboutGoal {
   id: string;
-  name: string;
-  description: string;
-  establishedDate: string;
-  vision?: string;
-  mission?: string;
-  objectives?: string[];
-  generalOverview?: string;
-  head?: string;
-  members?: FacultyMember[];
-  departments?: AboutDepartment[];
-  services?: AboutService[];
-  news?: AboutNews[];
+  index: number;
+  goalName: string;
+  aboutId: string;
 }
 
-export interface AboutDepartment {
-  id: number;
-  name: string;
-  description: string;
-  head: string;
-  establishedDate: string;
-  location: string;
-  contactInfo: ContactInfo;
-  programs?: string[];
-  faculty?: FacultyMember[];
-}
-
-export interface AboutService {
-  id: number;
-  name: string;
-  description: string;
-  category: string;
-  isActive: boolean;
-  requirements?: string[];
-  procedures?: string[];
-  duration?: string;
-  cost?: string;
-}
-
-export interface AboutNews {
-  id: number;
-  title: string;
+// الموديل الأساسي لصفحة "عن الكلية"
+export interface AboutUniversity {
+  id: string;
   content: string;
-  excerpt: string;
-  publishDate: string;
-  lastModified: string;
-  author: string;
-  category: NewsCategory;
-  imageUrl?: string;
-  tags?: string[];
-  isPublished: boolean;
-  views?: number;
+  mission: string;
+  vision: string;
+  history: string;
+  goals: AboutGoal[];
+  pageId: string;
+  pageType: string;   // "AboutUniversity"
+  pageName: string;
+  pageNameEn: string;
 }
 
-export interface ContactInfo {
-  phone?: string;
-  email?: string;
-  office?: string;
-  website?: string;
+// مرفقات عضو هيئة التدريس (صور شخصية)
+export interface MemberAttachment {
+  id: string;
+  fileName: string;
+  isPublic: boolean;
+  relativePath: string;
+  folderName: string;
+  url: string;
+  memberId: string;
 }
 
-export interface FacultyMember {
-  id: number;
-  name: string;
-  title: string;
-  email: string;
-  phone?: string;
-  office?: string;
+// عضو هيئة التدريس
+export interface Member {
+  id: string;
+  isPresident: boolean;
+  fullName: string;
+  position: string;
   specialization: string;
-}
-
-export enum NewsCategory {
-  NEWS = 'أخبار',
-  CONFERENCES = 'مؤتمرات',
-  EVENTS = 'فعاليات'
+  pageId: string;
+  memberType: string; // President, Sector, Center, Unit, Program, Department
+  memberAttachments: MemberAttachment[];
 }

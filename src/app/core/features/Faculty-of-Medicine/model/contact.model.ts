@@ -1,10 +1,16 @@
-export interface ContactInfo {
-  logoPath: string;
-  logoAlt: string;
-  title: string;
-  description: string;
+// الموديل الأساسي لبيانات التواصل
+export interface Contact {
+  id: string;
   address: string;
   phone: string;
   email: string;
-  logoAltText?: string;
+  facebook: string;
+  twitter: string;
+  instagram: string;
+  linkedIn: string;
+  youTube: string;
+  whatsApp: string;
+  mapLocation: string;
+  webSite: string;
+  fax: string;
 }

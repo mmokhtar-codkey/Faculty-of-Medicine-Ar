@@ -1,22 +1,13 @@
 <div class="container section">
   <!-- Service Title Section -->
-  <div class="sector-header bg-primary text-white p-4 mb-4 rounded">
-    <h1 class="mb-0">{{ service?.name || 'جاري تحميل البيانات...' }}</h1>
+  <div class="sector-header  p-4 mb-4 rounded">
+    <h1 class="text-brown">{{ service?.title || 'جاري تحميل البيانات...' }}</h1>
   </div>
 
   <!-- Horizontal Tabs -->
   <div class="medicine-tabs">
     <ul class="nav nav-tabs">
-      <li class="nav-item">
-        <button 
-          class="nav-link" 
-          [class.active]="activeTab === 'about'"
-          (click)="switchTab('about')"
-          type="button"
-        >
-          عن الخدمة
-        </button>
-      </li>
+     
       <li class="nav-item">
         <button 
           class="nav-link" 
@@ -27,228 +18,26 @@
           تفاصيل الخدمة
         </button>
       </li>
-      <li class="nav-item">
-        <button 
-          class="nav-link" 
-          [class.active]="activeTab === 'services'"
-          (click)="switchTab('services')"
-          type="button"
-        >
-          متطلبات الخدمة
-        </button>
-      </li>
-      <li class="nav-item">
-        <button
-          class="nav-link"
-          [class.active]="activeTab === 'news'"
-          (click)="switchTab('news')"
-          type="button"
-        >
-          أخبار ذات صلة
-        </button>
-      </li>
-      <li class="nav-item">
-        <button
-          class="nav-link"
-          [class.active]="activeTab === 'members'"
-          (click)="switchTab('members')"
-          type="button"
-        >
-          فريق الخدمة
-        </button>
-      </li>
+  
     </ul>
   </div>
 
   <!-- Content Area -->
   <div class="row">
-    <!-- About Tab Content -->
-    <div *ngIf="activeTab === 'about'" class="col-12">
-      <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 mb-4">
-          <div class="list-group">
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'overview'"
-              (click)="switchAboutSection('overview')"
-            >
-              نظرة عامة
-            </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'vision'"
-              (click)="switchAboutSection('vision')"
-            >
-              الرؤية
-            </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'mission'"
-              (click)="switchAboutSection('mission')"
-            >
-              الرسالة
-            </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="activeAboutSection === 'objectives'"
-              (click)="switchAboutSection('objectives')"
-            >
-              الأهداف
-            </button>
-          </div>
-        </div>
-
-        <!-- Content -->
-        <div class="col-md-9">
-          <div class="card">
-            <div class="card-body">
-              <div *ngIf="activeAboutSection === 'overview'">
-                <h3 class="text-brown mb-3">نظرة عامة</h3>
-                <p>{{ service?.generalOverview }}</p>
-                <div *ngIf="service?.targetAudience" class="mt-3">
-                  <h5 class="text-primary">الجمهور المستهدف</h5>
-                  <p>{{ service?.targetAudience }}</p>
-                </div>
-              </div>
-
-              <div *ngIf="activeAboutSection === 'vision'">
-                <h3 class="text-brown mb-3">الرؤية</h3>
-                <p>{{ service?.vision }}</p>
-              </div>
-
-              <div *ngIf="activeAboutSection === 'mission'">
-                <h3 class="text-brown mb-3">الرسالة</h3>
-                <p>{{ service?.mission }}</p>
-              </div>
-
-              <div *ngIf="activeAboutSection === 'objectives'">
-                <h3 class="text-brown mb-3">الأهداف</h3>
-                <ul>
-                  <li *ngFor="let objective of service?.objectives">{{ objective }}</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Service Details Tab Content -->
     <div *ngIf="activeTab === 'departments'" class="col-12">
-      <div class="card">
+      <div class="card" *ngIf="service?.title || service?.description">
         <div class="card-body">
-          <h3 class="text-brown mb-3">تفاصيل الخدمة</h3>
-          
-          <div *ngIf="service && service.steps && service.steps.length > 0" class="mb-4">
-            <h5 class="text-primary">خطوات الحصول على الخدمة</h5>
-            <ol>
-              <li *ngFor="let step of service.steps" class="mb-2">{{ step }}</li>
-            </ol>
-          </div>
-
-          <div *ngIf="service?.notes" class="mb-4">
-            <h5 class="text-primary">ملاحظات مهمة</h5>
-            <div class="alert alert-info">
-              <i class="fas fa-info-circle me-2"></i>
-              {{ service?.notes }}
-            </div>
-          </div>
-
-          <div *ngIf="service?.head">
-            <h5 class="text-primary">المسؤول عن الخدمة</h5>
-            <p>{{ service?.head }}</p>
-          </div>
+          <h3 class="text-brown mb-3"> {{service?.title }}</h3>
+          <p class="mb-3" [innerHTML]="formatDescription(service?.description || '')"></p>
         </div>
       </div>
+      <p *ngIf="!service?.title && !service?.description">لا توجد معلومات متاحة.</p>
     </div>
 
-    <!-- Service Requirements Tab Content -->
-    <div *ngIf="activeTab === 'services'" class="col-12">
-      <div class="card">
-        <div class="card-body">
-          <h3 class="text-brown mb-3">متطلبات الخدمة</h3>
-          
-          <div *ngIf="service && service.requirements && service.requirements.length > 0">
-            <h5 class="text-primary">المتطلبات الأساسية</h5>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item" *ngFor="let requirement of service.requirements">
-                <i class="fas fa-check-circle text-success me-2"></i>
-                {{ requirement }}
-              </li>
-            </ul>
-          </div>
+  
+   
 
-          <div *ngIf="service?.targetAudience" class="mt-4">
-            <h5 class="text-primary">الفئة المستهدفة</h5>
-            <p>{{ service?.targetAudience }}</p>
-          </div>
+           
         </div>
-      </div>
-    </div>
-
-    <!-- News Tab Content -->
-    <div *ngIf="activeTab === 'news'" class="col-12">
-      <div class="row">
-        <div class="col-md-4 mb-4" *ngFor="let newsItem of serviceNews">
-          <div class="news-card">
-            <div class="news-card-image" *ngIf="newsItem.imageUrl">
-              <img [src]="newsItem.imageUrl" [alt]="newsItem.title" class="img-fluid">
-            </div>
-            <div class="news-card-body">
-              <div class="news-card-date">{{ newsItem.publishDate | date: 'yyyy/MM/dd' }}</div>
-              <h5 class="news-card-title">{{ newsItem.title }}</h5>
-              <p class="news-card-excerpt">{{ newsItem.excerpt }}</p>
-              <button
-                class="btn btn-medicine btn-sm"
-                (click)="goToNewsDetails(newsItem.id)"
-              >
-                اقرأ المزيد
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Members Tab Content -->
-    <div *ngIf="activeTab === 'members'" class="col-12">
-      <div class="card">
-        <div class="card-body">
-          <h3 class="text-brown mb-3">فريق الخدمة</h3>
-
-          <div *ngIf="service?.head" class="mb-4">
-            <h5 class="text-primary">المسؤول عن الخدمة</h5>
-            <p>{{ service?.head }}</p>
-          </div>
-
-          <div *ngIf="service && service.members && service.members.length > 0">
-            <h5 class="text-primary">أعضاء فريق الخدمة</h5>
-            <div class="row">
-              <div class="col-md-6 mb-3" *ngFor="let member of service.members!">
-                <div class="card">
-                  <div class="card-body">
-                    <h6 class="card-title">{{ member.name }}</h6>
-                    <p class="card-text">{{ member.title }}</p>
-                    <p class="card-text"><strong>التخصص:</strong> {{ member.specialization }}</p>
-                    <p class="card-text" *ngIf="member.email"><strong>البريد الإلكتروني:</strong> {{ member.email }}</p>
-                    <p class="card-text" *ngIf="member.phone"><strong>الهاتف:</strong> {{ member.phone }}</p>
-                    <p class="card-text" *ngIf="member.office"><strong>المكتب:</strong> {{ member.office }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="service && !service.head && (!service.members || service.members.length === 0)">
-            <p>لا توجد معلومات متاحة عن فريق الخدمة.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+  

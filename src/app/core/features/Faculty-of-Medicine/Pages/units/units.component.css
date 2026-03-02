@@ -18,7 +18,7 @@ h1{
 
 .list-group-item:hover {
   background-color: var(--medicine-light-gray);
-  color: var(--medicine-primary-red);
+  color: var(--white);
 }
 
 .list-group-item.active {

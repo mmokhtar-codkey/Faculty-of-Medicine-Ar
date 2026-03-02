@@ -1,67 +1,58 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ProgramsService } from '../../Services/programs.service';
-import { ProgramDetails, Course, ProgramService, ProgramNews } from '../../model/program.model';
+import { Program, ProgramDetail, ProgramMember } from '../../model/program.model';
+import { CleanHtmlPipe } from '../../../../pipes/clean-html.pipe'; // ✅ استدعاء الـ Pipe
+
 
 @Component({
   selector: 'app-programs',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CleanHtmlPipe],
   templateUrl: './programs.component.html',
   styleUrls: ['./programs.component.css']
 })
 export class ProgramsComponent implements OnInit {
-  program?: ProgramDetails;
-  courses: Course[] = [];
-  services: ProgramService[] = [];
-  programNews: ProgramNews[] = [];
-  
+  program?: Program;
+  programDetail?: ProgramDetail;
+  programMembers: ProgramMember[] = [];
+
   activeTab = 'about';
   activeAboutSection = 'overview';
-  selectedCourse?: Course;
-  selectedService?: ProgramService;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private programsService: ProgramsService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const programId = +params['id'];
-      if (programId) {
-        this.loadProgramData(programId);
+      const slug = params['slug']; // نقرأ الـ slug بدل الـ id
+      if (slug) {
+        this.loadProgramData(slug);
       }
     });
   }
 
-  private loadProgramData(programId: number): void {
-    // Load program details
-    this.programsService.getById(programId).subscribe(program => {
-      this.program = program;
-    });
+  private loadProgramData(slug: string): void {
+    // بيانات البرنامج الأساسية بالـ slug
+    this.programsService.getProgramBySlug(slug).subscribe(program => {
+      if (program) {
+        this.program = program;
 
-    // Load courses
-    this.programsService.getCoursesByProgramId(programId).subscribe(courses => {
-      this.courses = courses;
-      if (this.courses.length > 0) {
-        this.selectedCourse = this.courses[0];
+        const programId = program.id; // نستخدم الـ id الداخلي لجلب باقي التفاصيل
+
+        // تفاصيل البرنامج
+        this.programsService.getProgramDetailsByProgramId(programId).subscribe(detail => {
+          this.programDetail = detail;
+        });
+
+        // أعضاء البرنامج
+        this.programsService.getProgramMembersByProgramId(programId).subscribe(members => {
+          this.programMembers = members;
+        });
       }
-    });
-
-    // Load services
-    this.programsService.getServicesByProgramId(programId).subscribe(services => {
-      this.services = services;
-      if (this.services.length > 0) {
-        this.selectedService = this.services[0];
-      }
-    });
-
-    // Load program news
-    this.programsService.getNewsByProgramId(programId).subscribe(news => {
-      this.programNews = news;
     });
   }
 
@@ -71,17 +62,5 @@ export class ProgramsComponent implements OnInit {
 
   switchAboutSection(sectionName: string): void {
     this.activeAboutSection = sectionName;
-  }
-
-  selectCourse(course: Course): void {
-    this.selectedCourse = course;
-  }
-
-  selectService(service: ProgramService): void {
-    this.selectedService = service;
-  }
-
-  goToNewsDetails(newsId: number): void {
-    this.router.navigate(['/news', newsId]);
   }
 }

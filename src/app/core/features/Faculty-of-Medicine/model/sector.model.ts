@@ -1,77 +1,109 @@
+// الهدف (Goal) الخاص بالقطاع
+export interface SectorGoal {
+  id: string;
+  index: number;
+  goalName: string;
+  aboutId: string;
+}
+
+// المرفقات الخاصة بالقطاع
+export interface SectorAttachment {
+  id?: string;
+  fileName?: string;
+  isPublic?: boolean;
+  relativePath?: string;
+  folderName?: string;
+  url?: string;
+  isFeatured?: boolean;
+  sectorId?: string;
+}
+
+// الموديل الأساسي للقطاع
 export interface Sector {
-  id: number;
+  id: string;
   name: string;
-  description: string;
-  establishedDate: string;
-  vision?: string;
-  mission?: string;
-  objectives?: string[];
-  generalOverview?: string;
-  head?: string;
-  members?: FacultyMember[];
-  departments?: Department[];
-  services?: Service[];
-  news?: News[];
+  subTitle: string;
+  pageId: string;
+  pageTitle: string;
+  slug: string;
+  aboutId: string;
+  about: string;
+  mission: string;
+  vision: string;
+  goals: SectorGoal[];
+  sectorAttachments: SectorAttachment[];
 }
 
-export interface Department {
-  id: number;
-  name: string;
-  description: string;
-  head: string;
-  establishedDate: string;
-  location: string;
-  contactInfo: ContactInfo;
-  programs?: string[];
-  faculty?: FacultyMember[];
-}
-
-export interface Service {
-  id: number;
-  name: string;
-  description: string;
-  category: string;
-  isActive: boolean;
-  requirements?: string[];
-  procedures?: string[];
-  duration?: string;
-  cost?: string;
-}
-
-export interface News {
-  id: number;
+// تفاصيل إضافية للقطاع
+export interface SectorDetail {
+  id: string;
   title: string;
   content: string;
-  excerpt: string;
-  publishDate: string;
-  lastModified: string;
-  author: string;
-  category: NewsCategory;
-  imageUrl?: string;
-  tags?: string[];
-  isPublished: boolean;
-  views?: number;
+  sectorId: string;
+  sectorName: string;
 }
 
-export interface ContactInfo {
-  phone?: string;
-  email?: string;
-  office?: string;
-  website?: string;
+// أعضاء القطاع
+export interface SectorMember {
+  id: string;
+  isLeader: boolean;
+  sectorId: string;
+  sectorName: string;
+  memberId: string;
+  memberName: string;
 }
 
-export interface FacultyMember {
-  id: number;
+// منشورات القطاع
+export interface SectorPost {
+  id: string;
+  sectorId: string;
+  sectorName: string;
+  postId: string;
+  postName: string;
+}
+
+// البرامج التابعة للقطاع
+export interface SectorProgram {
+  id: string;
   name: string;
-  title: string;
-  email: string;
-  phone?: string;
-  office?: string;
-  specialization: string;
+  sectorId: string;
+  sectorName: string;
+  programId: string;
+  programName?: string | null;
 }
 
-export enum NewsCategory {
-  NEWS = 'أخبار',
-  CONFERENCES = 'مؤتمرات',
-  EVENTS = 'فعاليات'
+// الخدمات التابعة للقطاع
+export interface SectorService {
+  id: string;
+  name: string;
+  details: string;
+  duration: string;
+  applicationUrl: string;
+  downloadUrl: string;
+  isOnline: boolean;
+  category: string;
+  fees: number;
+  contactPerson: string;
+  contactPhone: string;
+  sectorId: string;
+  sectorName: string;
+}
+
+
+// الوحدات التابعة للقطاع
+export interface SectorUnit {
+  id: string;
+  unitName: string;
+  unitDescriptionAr?: string | null;
+  email?: string;
+  employeesCount?: number;
+  location?: string;
+  unitPhone?: string;
+  memberId?: string;
+  memberName?: string;
+  unitId?: string;
+  managementId?: string;
+  managementName?: string;
+  sectorId: string;
+  sectorName: string;
 }

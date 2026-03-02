@@ -1,8 +1,7 @@
 export interface Statistic {
-  id: number;
+  id: string;
   title: string;
   value: string;
-  description: string;
   iconPath: string;
-  iconAlt: string;
+  isActive: boolean;
 }

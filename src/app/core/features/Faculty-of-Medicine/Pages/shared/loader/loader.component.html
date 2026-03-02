@@ -1,0 +1,36 @@
+<div class="loader-overlay" [class.visible]="isVisible" *ngIf="isVisible">
+  <div class="loader-container">
+    <div class="brain-loader">
+      <!-- Brain Image -->
+      <img 
+        src="assets/cardiology.png" 
+        alt="Brain" 
+        class="brain-image"
+      />
+      
+      <!-- Heart Counter Animation -->
+      
+      <!-- Pulse line -->
+      <svg class="pulse-svg" viewBox="0 0 200 100" preserveAspectRatio="none">
+        <path 
+          class="pulse-line"
+          d="M 0 50 L 40 50 L 50 20 L 60 80 L 70 50 L 100 50 L 110 30 L 120 70 L 130 50 L 200 50"
+          fill="none"
+          stroke="var(--medicine-primary-orange)"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      
+      <!-- Pulse glow -->
+      <div class="pulse-glow"></div>
+    </div>
+    
+    <!-- Loading text -->
+    <div class="loader-text">
+      <h3>{{ message }}</h3>
+      <p>كلية الطب - جامعة الأقصر</p>
+    </div>
+  </div>
+</div>

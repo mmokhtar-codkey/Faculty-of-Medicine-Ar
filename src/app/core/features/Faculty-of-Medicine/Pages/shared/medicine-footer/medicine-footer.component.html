@@ -6,18 +6,15 @@
             <div class="footer-main-content-element">
               <aside class="widget">
                 <div class="widget-title uni-uppercase">
-                  <a href="#" (click)="onLinkClick('logo', contactInfo)">
-                    <img [src]="contactInfo.logoPath" [alt]="contactInfo.logoAlt" class="img-responsive">
+                  <a href="#" (click)="onLinkClick('logo', contact)">
+                    <img [src]="logoUrl" [alt]="'Faculty of Medicine Logo'" class="img-responsive" *ngIf="logoUrl">
                   </a>
                 </div>
                 <div class="widget-content">
-                  <p>{{ contactInfo.description }}</p>
+                  <p>{{ contact?.address }}</p>
                   <div class="uni-info-contact">
                     <ul>
-                      <li>
-                        <i class="fa fa-map-marker" aria-hidden="true"></i>
-                        {{ contactInfo.address }}
-                      </li>
+                    
                       <!-- <li>
                         <i class="fa fa-phone" aria-hidden="true"></i>
                         {{ contactInfo.phone }}

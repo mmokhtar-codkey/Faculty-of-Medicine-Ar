@@ -1,34 +1,48 @@
-<div class="departments-section" *ngIf="departments?.length"
->
+<div class="departments-section" *ngIf="departments?.length">
   <!-- Section Title -->
-  <div class="section-title" >
+  <div class="section-title">
     <h2>{{ sectionTitle }}</h2>
   </div>
 
-  <!-- Departments Grid -->
-  <div class="departments-grid" *ngIf="departments?.length">
-    <div class="department-card" *ngFor="let department of departments; trackBy: trackByFn" (click)="onDepartmentClick(department)">
-      <div class="card-icon">
-        <img
-          [src]="department.iconPath"
-          [alt]="department.iconAlt"
-          class="icon-image"
-        >
-      </div>
-      <div class="card-content">
-        <h4 class="card-title">{{ department.name }}</h4>
-        <p class="card-description">{{ department.description }}</p>
+  <!-- Academic Departments -->
+  <div *ngIf="academicDepartments?.length">
+    <h3 class="dept-subtitle academic">الأقسام الأكاديمية</h3>
+    <div class="departments-grid">
+      <div class="department-card" 
+           *ngFor="let department of academicDepartments; trackBy: trackByFn" 
+           (click)="onDepartmentClick(department)">
+        <div class="card-icon">
+          <img
+            [src]="department.departmentAttachments?.[0]?.url"
+            [alt]="department.subTitle"
+            class="icon-image"
+          >
+        </div>
+        <div class="card-content">
+          <h4 class="card-title">{{ department.name }}</h4>
+        </div>
       </div>
     </div>
   </div>
 
-    <!-- All Services Button -->
-  <div class="all-services-section" *ngIf="showAllServicesButton">
-    <a
-      class="all-services-btn"
-     [routerLink]="allServicesUrl"
-    >
-      {{ allServicesText }}
-    </a>
+  <!-- Clinical Departments -->
+  <div *ngIf="clinicalDepartments?.length">
+    <h3 class="dept-subtitle clinical">الأقسام الإكلينيكية</h3>
+    <div class="departments-grid">
+      <div class="department-card" 
+           *ngFor="let department of clinicalDepartments; trackBy: trackByFn" 
+           (click)="onDepartmentClick(department)">
+        <div class="card-icon">
+          <img
+            [src]="department.departmentAttachments?.[0]?.url"
+            [alt]="department.subTitle"
+            class="icon-image"
+          >
+        </div>
+        <div class="card-content">
+          <h4 class="card-title">{{ department.name }}</h4>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

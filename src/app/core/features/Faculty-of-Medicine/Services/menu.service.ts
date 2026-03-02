@@ -1,229 +1,87 @@
-import { Injectable } from '@angular/core';
-import { MenuTab } from '../model/menu.model';
-import { Observable, of } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { NavbarItem, ApiMenuItem } from '../model/menu.model';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { slugify } from '../../../../utils/slugify';
+import { environment } from '../../../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import {
+  catchError,
+  of,
+
+} from 'rxjs';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuService {
-  private menuTabs: MenuTab[] = [
-    {
-      id: 1,
-      title: 'الرئيسية',
-      target: '/',
-      isActive: true
-    },
-    {
-      id: 2,
-      title: 'عن الكلية',
-                target: '/about',
+  [x: string]: any;
+  private apiUrl = environment.apiUrl;
+  private readonly errorHandler = inject(ErrorHandlerService);
 
-      isActive: false,
-      type: 'menu',
-      childs: [
-        {
-          id: 21,
-          title: 'رؤية ورسالة الكلية',
-          target: '/about/1',
-          isActive: false
-        },
-        {
-          id: 22,
-          title: 'تاريخ الكلية',
-          target: '/about/2',
-          isActive: false
-        },
-        {
-          id: 23,
-          title: 'اهداف الكلية',
-          target: '/about/3',
-          isActive: false
-        },
-        {
-          id: 24,
-          title: 'الهيكل التنظيمي',
-          target: '/about/4',
-          isActive: false
-        }
-      ]
-    },
-    {
-      id: 3,
-      title: 'الأقسام الأكاديمية',
-      isActive: false,
-      type: 'menu',
-      childs: [
-        {
-          id: 321,
-          title: 'التشريح',
-          target: '/departments/1',
-          isActive: false
-        },
-        {
-          id: 322,
-          title: 'الفسيولوجيا',
-          target: '/departments/2',
-          isActive: false
-        },
-        {
-          id: 323,
-          title: 'علم الأدوية',
-          target: '/departments/3',
-          isActive: false
-        },
-        {
-          id: 324,
-          title: 'علم الأمراض',
-          target: '/departments/pathology',
-          isActive: false
-        }
-      ]
-    },
-    {
-      id: 31,
-      title: 'البرامج',
-      isActive: false,
-      type: 'menu',
-      childs: [
-        {
-          id: 311,
-          title: 'الطب العام',
-          target: '/programs/1',
-          isActive: false
-        },
-        {
-          id: 312,
-          title: 'الطب التخصصي',
-          target: '/programs/2',
-          isActive: false
-        }
-      ]
-    },
-    {
-      id: 4,
-      title: 'القطاعات',
-      isActive: false,
-      type: 'menu',
-      childs: [
-        {
-          id: 41,
-          title: 'قطاع شؤون التعليم والطلاب',
-          target: '/sectors/1',
-          isActive: false
-        },
-        {
-          id: 42,
-          title: 'قطاع الدراسات العليا والبحوث',
-          target: '/sectors/2',
-          isActive: false
-        },
-        {
-          id: 43,
-          title: 'قطاع خدمة المجتمع وتنمية البيئة',
-          target: '/sectors/3',
-          isActive: false
-        }
-      ]
-    },
-    {
-      id: 5,
-      title: 'المراكز',
-      isActive: false,
-      type: 'menu',
-      childs: [
-        {
-          id: 51,
-          title: 'مركز التعليم الطبي المستمر',
-          target: '/centers/education',
-          isActive: false
-        },
-        {
-          id: 52,
-          title: 'مركز البحوث الطبية والتجارب المعملية',
-          target: '/centers/research',
-          isActive: false
-        }
-      ]
-    },
-    {
-      id: 9,
-      title: 'الوحدات',
-      isActive: false,
-      type: 'menu',
-      childs: [
-        {
-          id: 91,
-          title: 'وحدة ضمان الجودة والاعتماد',
-          target: '/units/quality',
-          isActive: false
-        },
-        {
-          id: 92,
-          title: 'وحدة تكنولوجيا المعلومات',
-          target: '/units/it',
-          isActive: false
-        }
-      ]
-    },
-    {
-      id: 6,
-      title: 'الخدمات',
-      target: '/services',
-      isActive: false,
-      type: 'menu',
-      childs: [
-        {
-          id: 61,
-          title: 'الخدمات الأكاديمية',
-          target: '/services/academic',
-          isActive: false
-        },
-        {
-          id: 62,
-          title: 'الخدمات الإدارية',
-          target: '/services/administrative',
-          isActive: false
-        }
-      ]
-    },
-    {
-      id: 7,
-      title: 'أخبار الكلية',
-      target: '/news',
-      isActive: false
-    },
-    {
-      id: 8,
-      title: 'اتصل بنا',
-      target: '/contact',
-      isActive: false
-    }
-  ];
+  constructor(
+    private http: HttpClient
+  ) { }
 
-  getMenuTabs(): Observable<MenuTab[]> {
-    return of(this.menuTabs);
+
+  // new method to get menu items from API
+  getAllMenus(): Observable<NavbarItem[]> {
+    return this.http.get<{ data: ApiMenuItem[] }>(`${this.apiUrl}menus/getall`).pipe(
+      map((response) => this.buildTree(response.data)),
+      catchError((error) => {
+        this.errorHandler.handleError(error);
+        return of([]); 
+      }),
+    );
   }
 
-  getMenuTabById(id: number): Observable<MenuTab | undefined> {
-    return of(this.menuTabs.find(tab => tab.id === id));
+
+  private buildTree(items: ApiMenuItem[]): NavbarItem[] {
+    // نجيب العناصر الرئيسية بس
+    const roots = items.filter((i) => !i.parentId);
+
+    return roots
+      .sort((a, b) => a.order - b.order)
+      .map((item) => this.mapItem(item));
   }
 
-  updateActiveTab(id: number): Observable<MenuTab[]> {
-    this.deactivateAll(this.menuTabs);
-    this.findAndActivate(this.menuTabs, id);
-    return of(this.menuTabs);
+  private mapItem(item: ApiMenuItem): NavbarItem {
+    return {
+      id: item.id,
+      type: item.titleEn?.toLowerCase() === 'departments' ? 'columns' : 'menu',
+      departmentType : item.departmentType,
+      isActive: false,
+      pageId: item.pageId,
+      label: item.title,
+      icon: item.icon,
+      slug: item.titleEn ? `/${slugify(item.titleEn)}` : '/',
+      children: item.childs?.length
+        ? item.childs.sort((a, b) => a.order - b.order)
+          .map((child) => this.mapItem(child)) : undefined,
+    };
   }
 
-  private deactivateAll(tabs: MenuTab[]): void {
+  updateActiveTab(id: string): Observable<NavbarItem[]> {
+    return this.getAllMenus().pipe(
+      map((tabs) => {
+        this.deactivateAll(tabs);
+        this.findAndActivate(tabs, id);
+        return tabs;
+      })
+    );
+  }
+
+  private deactivateAll(tabs: NavbarItem[]): void {
     tabs.forEach(tab => {
       tab.isActive = false;
-      if (tab.childs) {
-        this.deactivateAll(tab.childs);
+      if (tab.children) {
+        this.deactivateAll(tab.children);
       }
     });
   }
 
-  private findAndActivate(tabs: MenuTab[], id: number, parent?: MenuTab): boolean {
+  private findAndActivate(tabs: NavbarItem[], id: string, parent?: NavbarItem): boolean {
     for (let tab of tabs) {
       if (tab.id === id) {
         tab.isActive = true;
@@ -232,7 +90,7 @@ export class MenuService {
         }
         return true;
       }
-      if (tab.childs && this.findAndActivate(tab.childs, id, tab)) {
+      if (tab.children && this.findAndActivate(tab.children, id, tab)) {
         return true;
       }
     }

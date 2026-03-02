@@ -1,77 +1,49 @@
+// الهدف (Goal) الخاص بالمركز
+export interface CenterGoal {
+  id: string;
+  index: number;
+  goalName: string;
+  aboutId: string;
+}
+
+// المرفقات الخاصة بالمركز (لو فيه ملفات أو صور)
+export interface CenterAttachment {
+  id?: string;
+  filePath?: string;
+}
+
+// الموديل الأساسي للمركز
 export interface Center {
   id: string;
-  name: string;
-  description: string;
-  establishedDate: string;
-  vision?: string;
-  mission?: string;
-  objectives?: string[];
-  generalOverview?: string;
-  head?: string;
-  members?: FacultyMember[];
-  departments?: CenterDepartment[];
-  services?: CenterService[];
-  news?: CenterNews[];
+  subTitle: string;
+  slug:string;
+  place: string;
+  pageId: string;
+  centerName: string;
+  centerNameEn: string;
+  aboutId: string;
+  about: string;
+  mission: string;
+  vision: string;
+  goals: { id: string; index: number; goalName: string; aboutId: string }[];
+  centerAttachments: any[];
 }
 
-export interface CenterDepartment {
-  id: number;
-  name: string;
-  description: string;
-  head: string;
-  establishedDate: string;
-  location: string;
-  contactInfo: ContactInfo;
-  programs?: string[];
-  faculty?: FacultyMember[];
-}
-
-export interface CenterService {
-  id: number;
-  name: string;
-  description: string;
-  category: string;
-  isActive: boolean;
-  requirements?: string[];
-  procedures?: string[];
-  duration?: string;
-  cost?: string;
-}
-
-export interface CenterNews {
-  id: number;
+export interface CenterDetail {
+  id: string;
   title: string;
+  description: string;
   content: string;
-  excerpt: string;
-  publishDate: string;
-  lastModified: string;
-  author: string;
-  category: NewsCategory;
-  imageUrl?: string;
-  tags?: string[];
-  isPublished: boolean;
-  views?: number;
+  centerId: string;
+  center: string;
 }
 
-export interface ContactInfo {
-  phone?: string;
-  email?: string;
-  office?: string;
-  website?: string;
-}
-
-export interface FacultyMember {
-  id: number;
-  name: string;
-  title: string;
-  email: string;
-  phone?: string;
-  office?: string;
-  specialization: string;
-}
-
-export enum NewsCategory {
-  NEWS = 'أخبار',
-  CONFERENCES = 'مؤتمرات',
-  EVENTS = 'فعاليات'
+export interface CenterMember {
+  id: string;
+  isLeader: boolean;
+  centerId: string;
+  centerName: string;
+  memberId: string;
+  memberName: string;
+  memberImageUrl?: string;
 }

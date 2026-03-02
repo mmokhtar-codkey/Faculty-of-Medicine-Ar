@@ -1,0 +1,403 @@
+/* ===============================
+   🩺 Medical Loader Component Styles
+   =============================== */
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(245, 245, 245, 0.98) 100%);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-slow);
+}
+
+.loader-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--container-padding);
+  text-align: center;
+}
+
+/* ===============================
+   🧠 Brain Image Loader
+   =============================== */
+
+.brain-loader {
+  margin-bottom: 2rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brain-image {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  animation: brainPulse 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(183, 28, 28, 0.2));
+}
+
+@keyframes brainPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.05);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  75% {
+    transform: scale(1.06);
+  }
+}
+
+/* ===============================
+   💓 Heart Counter Animation
+   =============================== */
+
+.heart-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: rgba(183, 28, 28, 0.1);
+  border-radius: 20px;
+}
+
+.heart-beat {
+  color: var(--medicine-primary-red);
+  font-size: 1.2rem;
+  animation: heartBeat 1s ease-in-out infinite;
+}
+
+@keyframes heartBeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.3);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.3);
+  }
+  60% {
+    transform: scale(1);
+  }
+}
+
+.heart-count {
+  font-family: 'Almarai', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--medicine-primary-red);
+}
+
+/* ===============================
+   📈 Pulse Line Animation
+   =============================== */
+
+.pulse-svg {
+  width: 200px;
+  height: 60px;
+  margin-top: 1rem;
+}
+
+.pulse-line {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: drawPulse 2s ease-in-out infinite;
+}
+
+@keyframes drawPulse {
+  0% {
+    stroke-dashoffset: 300;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+/* ===============================
+   🔴 Pulse Glow Animation
+   =============================== */
+
+.pulse-glow {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(183, 28, 28, 0.2) 0%, transparent 70%);
+  animation: glowPulse 2s ease-out infinite;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes glowPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* ===============================
+   📝 Loading Text Styles
+   =============================== */
+
+.loader-text {
+  font-family: 'Almarai', sans-serif;
+  color: var(--medicine-primary-brown);
+  margin-top: 1rem;
+}
+
+.loader-text h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--medicine-primary-red);
+  margin-bottom: 0.5rem;
+  animation: fadeInText 1s ease-in-out infinite alternate;
+}
+
+.loader-text p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--medicine-primary-brown);
+  margin: 0;
+  opacity: 0.8;
+  animation: fadeInSubtext 2s ease-in-out infinite alternate;
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeInText {
+  0% {
+    opacity: 0.7;
+    transform: translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInSubtext {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+/* ===============================
+   📱 Responsive Design
+   =============================== */
+
+@media (max-width: 768px) {
+  .brain-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .pulse-glow {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .pulse-svg {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .heart-counter {
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .heart-beat {
+    font-size: 1rem;
+  }
+  
+  .heart-count {
+    font-size: 1.2rem;
+  }
+  
+  .loader-text h3 {
+    font-size: 1.25rem;
+  }
+  
+  .loader-text p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .brain-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .pulse-glow {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .pulse-svg {
+    width: 140px;
+    height: 40px;
+  }
+  
+  .heart-counter {
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .heart-beat {
+    font-size: 0.9rem;
+  }
+  
+  .heart-count {
+    font-size: 1rem;
+  }
+  
+  .loader-text h3 {
+    font-size: 1.1rem;
+  }
+  
+  .loader-text p {
+    font-size: 0.8rem;
+  }
+  
+  .loader-container {
+    padding: 1rem;
+  }
+}
+
+/* ===============================
+   ♿ Accessibility - Reduced Motion
+   =============================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .brain-image,
+  .heart-beat,
+  .pulse-line,
+  .pulse-glow,
+  .loader-text h3,
+  .loader-text p {
+    animation: none !important;
+  }
+  
+  .brain-image {
+    transform: scale(1);
+  }
+  
+  .heart-beat {
+    transform: scale(1);
+  }
+  
+  .pulse-line {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  
+  .loader-text h3,
+  .loader-text p {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===============================
+   🎨 High Contrast Mode Support
+   =============================== */
+
+@media (prefers-contrast: high) {
+  .loader-overlay {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: none;
+  }
+  
+  .brain-image {
+    filter: drop-shadow(0 0 2px rgba(183, 28, 28, 0.5));
+  }
+  
+  .heart-counter {
+    background: rgba(183, 28, 28, 0.2);
+    border: 1px solid var(--medicine-primary-red);
+  }
+}
+
+/* ===============================
+   🌙 Dark Mode Support (Future)
+   =============================== */
+
+@media (prefers-color-scheme: dark) {
+  .loader-overlay {
+    background: linear-gradient(135deg, 
+      rgba(33, 37, 41, 0.95) 0%, 
+      rgba(52, 58, 64, 0.98) 100%);
+  }
+  
+  .loader-text h3 {
+    color: var(--medicine-primary-orange);
+  }
+  
+  .loader-text p {
+    color: var(--medicine-light-gray);
+  }
+  
+  .heart-counter {
+    background: rgba(183, 28, 28, 0.2);
+  }
+}
+
+/* ===============================
+   🎯 Print Styles
+   =============================== */
+
+@media print {
+  .loader-overlay {
+    display: none !important;
+  }
+}

@@ -1,67 +1,88 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DepartmentsService } from '../../Services/departments.service';
-import { Department, Program, DepartmentService, DepartmentNews } from '../../model/department.model';
+import { Department, DepartmentDetail, DepartmentProgram, DepartmentService, DepartmentMember } from '../../model/department.model';
+import { slugify } from '../../../../../utils/slugify';
+import { CleanHtmlPipe } from '../../../../pipes/clean-html.pipe'; // ✅ استدعاء الـ Pipe
+
 
 @Component({
   selector: 'app-departments',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule, CleanHtmlPipe],
   templateUrl: './departments.component.html',
   styleUrls: ['./departments.component.css']
 })
 export class DepartmentsComponent implements OnInit {
   department?: Department;
-  programs: Program[] = [];
-  services: DepartmentService[] = [];
-  departmentNews: DepartmentNews[] = [];
-  
-  activeTab = 'about';
-  activeAboutSection = 'overview';
-  selectedProgram?: Program;
+  departmentDetail?: DepartmentDetail;
+  departmentPrograms: DepartmentProgram[] = [];
+  departmentServices: DepartmentService[] = [];
+  departmentMembers: DepartmentMember[] = [];
+
+  activeTab = 'services';
+  activeAboutSection = 'services';
+  selectedProgram?: DepartmentProgram;
   selectedService?: DepartmentService;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private departmentsService: DepartmentsService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const departmentId = +params['id'];
-      if (departmentId) {
-        this.loadDepartmentData(departmentId);
+      const slug = params['slug']; // slug بدل id
+      if (slug) {
+        this.loadDepartmentData(slug);
       }
     });
   }
 
-  private loadDepartmentData(departmentId: number): void {
-    // Load department details
-    this.departmentsService.getById(departmentId).subscribe(department => {
-      this.department = department;
-    });
+  private loadDepartmentData(slug: string): void {
+    // Reset all data before loading new department
+    this.department = undefined;
+    this.departmentDetail = undefined;
+    this.departmentPrograms = [];
+    this.departmentServices = [];
+    this.departmentMembers = [];
+    this.selectedProgram = undefined;
+    this.selectedService = undefined;
+    
+    // بيانات القسم الأساسية بالـ slug
+    this.departmentsService.getDepartmentBySlug(slug).subscribe(department => {
+      if (department) {
+        this.department = department;
 
-    // Load programs
-    this.departmentsService.getProgramsByDepartmentId(departmentId).subscribe(programs => {
-      this.programs = programs;
-      if (this.programs.length > 0) {
-        this.selectedProgram = this.programs[0];
+        const departmentId = department.id; // نستخدم الـ id الداخلي لجلب باقي التفاصيل
+
+        // تفاصيل القسم
+        this.departmentsService.getDepartmentDetailsById(departmentId).subscribe(detail => {
+          this.departmentDetail = detail;
+        });
+
+        // برامج القسم
+        this.departmentsService.getDepartmentProgramsById(departmentId).subscribe(programs => {
+          this.departmentPrograms = programs;
+          if (this.departmentPrograms.length > 0) {
+            this.selectedProgram = this.departmentPrograms[0];
+          }
+        });
+
+        // خدمات القسم
+        this.departmentsService.getDepartmentServicesById(departmentId).subscribe(services => {
+          this.departmentServices = services;
+          if (this.departmentServices.length > 0) {
+            this.selectedService = this.departmentServices[0];
+          }
+        });
+
+        // أعضاء القسم
+        this.departmentsService.getDepartmentMembersById(departmentId).subscribe(members => {
+          this.departmentMembers = members;
+        });
       }
-    });
-
-    // Load services
-    this.departmentsService.getServicesByDepartmentId(departmentId).subscribe(services => {
-      this.services = services;
-      if (this.services.length > 0) {
-        this.selectedService = this.services[0];
-      }
-    });
-
-    // Load department news
-    this.departmentsService.getNewsByDepartmentId(departmentId).subscribe(news => {
-      this.departmentNews = news;
     });
   }
 
@@ -73,15 +94,11 @@ export class DepartmentsComponent implements OnInit {
     this.activeAboutSection = sectionName;
   }
 
-  selectProgram(program: Program): void {
+  selectProgram(program: DepartmentProgram): void {
     this.selectedProgram = program;
   }
 
   selectService(service: DepartmentService): void {
     this.selectedService = service;
-  }
-
-  goToNewsDetails(newsId: number): void {
-    this.router.navigate(['/news', newsId]);
   }
 }

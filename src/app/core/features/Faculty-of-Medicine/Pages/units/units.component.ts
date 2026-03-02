@@ -1,67 +1,58 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { UnitsService } from '../../Services/units.service';
-import { Unit, UnitDepartment, UnitService, UnitNews } from '../../model/unit.model';
+import { Unit, UnitDetail, UnitMember } from '../../model/unit.model';
+import { CleanHtmlPipe } from '../../../../pipes/clean-html.pipe'; // ✅ استدعاء الـ Pipe
+
 
 @Component({
   selector: 'app-units',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CleanHtmlPipe],
   templateUrl: './units.component.html',
   styleUrls: ['./units.component.css']
 })
 export class UnitsComponent implements OnInit {
   unit?: Unit;
-  departments: UnitDepartment[] = [];
-  services: UnitService[] = [];
-  unitNews: UnitNews[] = [];
-  
+  unitDetail?: UnitDetail;
+  unitMembers: UnitMember[] = [];
+
   activeTab = 'about';
   activeAboutSection = 'overview';
-  selectedDepartment?: UnitDepartment;
-  selectedService?: UnitService;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private unitsService: UnitsService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const unitId = params['id'];
-      if (unitId) {
-        this.loadUnitData(unitId);
+      const slug = params['slug']; // نقرأ الـ slug بدل الـ id
+      if (slug) {
+        this.loadUnitData(slug);
       }
     });
   }
 
-  private loadUnitData(unitId: string): void {
-    // Load unit details
-    this.unitsService.getById(unitId).subscribe(unit => {
-      this.unit = unit;
-    });
+  private loadUnitData(slug: string): void {
+    // بيانات الوحدة الأساسية بالـ slug
+    this.unitsService.getUnitBySlug(slug).subscribe(unit => {
+      if (unit) {
+        this.unit = unit;
 
-    // Load departments
-    this.unitsService.getDepartmentsByUnitId(unitId).subscribe(departments => {
-      this.departments = departments;
-      if (this.departments.length > 0) {
-        this.selectedDepartment = this.departments[0];
+        const unitId = unit.id; // نستخدم الـ id الداخلي لجلب باقي التفاصيل
+
+        // تفاصيل الوحدة
+        this.unitsService.getUnitDetailsByUnitId(unitId).subscribe(detail => {
+          this.unitDetail = detail;
+        });
+
+        // أعضاء الوحدة
+        this.unitsService.getUnitMembersByUnitId(unitId).subscribe(members => {
+          this.unitMembers = members;
+        });
       }
-    });
-
-    // Load services
-    this.unitsService.getServicesByUnitId(unitId).subscribe(services => {
-      this.services = services;
-      if (this.services.length > 0) {
-        this.selectedService = this.services[0];
-      }
-    });
-
-    // Load unit news
-    this.unitsService.getNewsByUnitId(unitId).subscribe(news => {
-      this.unitNews = news;
     });
   }
 
@@ -71,17 +62,5 @@ export class UnitsComponent implements OnInit {
 
   switchAboutSection(sectionName: string): void {
     this.activeAboutSection = sectionName;
-  }
-
-  selectDepartment(department: UnitDepartment): void {
-    this.selectedDepartment = department;
-  }
-
-  selectService(service: UnitService): void {
-    this.selectedService = service;
-  }
-
-  goToNewsDetails(newsId: number): void {
-    this.router.navigate(['/news', newsId]);
   }
 }
